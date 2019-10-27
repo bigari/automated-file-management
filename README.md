@@ -20,7 +20,6 @@ To run the frontend alone in a docker container
 cd frontend
 docker build -t afm-frontend .
 docker run -it -v $(pwd):/app -p 3000:3000 afm-frontend
-
 ```
 
 To run the backend alone in a docker container
