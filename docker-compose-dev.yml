@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  rest-api:
+    build: ./backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - 5002:5002 
+
+  webapp:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 5001:3000
+    depends_on:
+      - rest-api
+    
