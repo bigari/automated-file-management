@@ -29,7 +29,7 @@ pipeline {
     catch(error) {
 
     }finally {
-        docker-compose stop rest-api
-        docker-compose stop webapp
+        sh 'docker-compose stop rest-api'
+        sh 'docker-compose stop webapp'
     }
 }
