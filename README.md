@@ -19,7 +19,7 @@ To run the frontend alone in a docker container
 ```bash
 cd frontend
 docker build -t afm-frontend .
-docker run -it --name afm-frontend -v $(pwd):/app -p 3000:3000
+docker run -it -v $(pwd):/app -p 3000:3000 afm-frontend
 
 ```
 
@@ -28,7 +28,7 @@ To run the backend alone in a docker container
 ```bash
 cd backend
 docker build -t afm-backend .
-docker run -it --name afm-backend -v $(pwd):/app -p 5002:5002
+docker run -it -v $(pwd):/app -p 5002:5002 afm-backend
 ```
 
 To run the whole app in dev mode
