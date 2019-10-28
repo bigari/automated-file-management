@@ -1,2 +1,6 @@
 node_modules
 README.md
+.gitignore
+.git
+npm-debug.log
+.dockerignore
