@@ -16,6 +16,7 @@ pipeline {
                 }
             }
             steps{
+                sh 'cd /usr/src/app'
                 sh 'npm run test'    
             }
             
@@ -28,6 +29,7 @@ pipeline {
                 }
             }
             steps{
+                sh 'cd /usr/src/app'
                 sh 'npm run test'    
             }
             
