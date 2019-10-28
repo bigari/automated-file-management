@@ -2,6 +2,8 @@ version: '3'
 
 services:
   rest-api:
+    env_file:
+      - ./backend/.env.test
     build: ./backend
     volumes:
       - ./backend:/app
