@@ -2,9 +2,11 @@ version: '3'
 
 services:
   rest-api:
+    env_file:
+      - ./backend/.env.prod
     build: ./backend
     volumes:
-      - ./backend:/app
+      - ./backend:/usr/src/app
     ports:
       - 5003:5002 
 
