@@ -12,7 +12,7 @@ pipeline {
         stage('Backend tests') {
             agent {
                 docker {
-                    image 'rest-api'
+                    image 'afm_rest-api'
                 }
             }
             steps{
@@ -24,7 +24,7 @@ pipeline {
         stage('Frontend tests') {
             agent {
                 docker {
-                    image 'webapp'
+                    image 'afm_webapp'
                 }
             }
             steps{

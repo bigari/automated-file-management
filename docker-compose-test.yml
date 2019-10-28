@@ -16,5 +16,4 @@ services:
       - ./backend:/usr/src/app
     ports:
       - 5002:5002
-    depends_on:
-      - webapp
+    
