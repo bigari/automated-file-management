@@ -1,6 +1,6 @@
 FROM node:10.13.0
 WORKDIR /app
-COPY package.json /app
+COPY package*.json .
 RUN npm install
-COPY . /app
+COPY . .
 CMD ["npm", "start"]
