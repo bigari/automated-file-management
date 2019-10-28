@@ -1,6 +1,13 @@
 version: '3'
 
 services:
+  webapp:
+    build: ./frontend
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - 5001:3000
+
   rest-api:
     env_file:
       - ./backend/.env.test
@@ -9,13 +16,5 @@ services:
       - ./backend:/usr/src/app
     ports:
       - 5002:5002
-
-  webapp:
-    build: ./frontend
-    volumes:
-      - ./frontend:/usr/src/app
-    ports:
-      - 5001:3000
     depends_on:
-      - rest-api
-    
+      - webapp
