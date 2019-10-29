@@ -19,8 +19,8 @@ pipeline {
                         }
                     }
                     steps{
-                        // sh 'cd /usr/src/app && npm run test'
-                        sh 'node --version'
+                        sh 'cd /usr/src/app && npm run test'
+                        // sh 'node --version'
                     }
 
                 }
