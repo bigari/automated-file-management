@@ -32,12 +32,11 @@ pipeline {
                 }
             }
         }
-        post {
-            always {
-                sh 'docker images prune'
-            }
-        }
-
     }
-        
+    post {
+        always {
+            sh 'docker images prune'
+        }
+    }
+    
 }
