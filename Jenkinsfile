@@ -1,14 +1,11 @@
 pipeline {
-
     agent any
-
     stages {
         stage('Build') {
             steps{
                 sh 'docker-compose -f docker-compose-test.yml build'
             }
         }
-
         stage('Testing') {
             parallel {
                 stage('Backend tests') {
@@ -20,9 +17,7 @@ pipeline {
                     }
                     steps{
                         sh 'cd /usr/src/app && npm run test'
-                        // sh 'node --version'
                     }
-
                 }
                 stage('Frontend tests') {
                     agent {
@@ -32,17 +27,14 @@ pipeline {
                         }
                     }
                     steps{
-                        // sh 'cd /usr/src/app && npm run test'
-                        sh 'exit 0' 
+                        sh 'cd /usr/src/app && npm run test'
                     }
                 }
             }
         }
-        
-        stage("Clean"){
-            steps {
-                sh 'docker-compose stop webapp'
-                sh 'docker-compose stop rest-api'
+        post {
+            always {
+                sh 'docker images prune'
             }
         }
 
