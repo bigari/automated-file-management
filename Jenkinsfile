@@ -19,9 +19,10 @@ pipeline {
                         }
                     }
                     steps{
-                        sh 'cd /usr/src/app && npm run test'
-                        sh 'exit 0'   
+                        // sh 'cd /usr/src/app && npm run test'
+                        sh 'node --version'   
                     }
+
                 }
                 stage('Frontend tests') {
                     agent {
