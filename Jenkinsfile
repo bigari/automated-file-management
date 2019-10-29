@@ -7,7 +7,6 @@ pipeline {
             steps{
                 sh 'docker-compose -f docker-compose-test.yml build'
             }
-            
         }
         stage('Backend tests') {
             agent {
@@ -17,10 +16,8 @@ pipeline {
                 }
             }
             steps{
-                sh 'cd /usr/src/app && npm run test'    
+                sh 'npm run test && exit'   
             }
-            
-            
         }
         stage('Frontend tests') {
             agent {
@@ -30,10 +27,9 @@ pipeline {
                 }
             }
             steps{
-                sh 'cd /usr/src/app && npm run test'    
+                sh 'npm run test && exit' 
             }
         }
-
         stage("Clean"){
             steps {
                 sh 'docker-compose stop webapp'
