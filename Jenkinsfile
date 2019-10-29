@@ -5,19 +5,20 @@ pipeline {
     stages {
         stage('Build') {
             steps{
-                sh 'docker-compose -f docker-compose-test.yml up'    
+                sh 'docker build -t afm_client -f ./frontend/Dockerfile ./frontend'
+                sh 'docker build -t afm_api -f ./backend/Dockerfile ./backend'
             }
             
         }
         stage('Backend tests') {
             agent {
                 docker {
-                    image 'afm_rest-api'
+                    image 'afm_api'
+                    args '--rm -d -p 5002:5002'
                 }
             }
             steps{
-                sh 'cd /usr/src/app'
-                sh 'npm run test'    
+                sh 'cd /usr/src/app && npm run test'    
             }
             
             
@@ -25,12 +26,12 @@ pipeline {
         stage('Frontend tests') {
             agent {
                 docker {
-                    image 'afm_webapp'
+                    image 'afm_client'
+                    args '--rm -d -p 5001:3000'
                 }
             }
             steps{
-                sh 'cd /usr/src/app'
-                sh 'npm run test'    
+                sh 'cd /usr/src/app && npm run test'    
             }
             
         }
