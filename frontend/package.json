@@ -7,8 +7,10 @@
     "react-scripts": "3.2.0"
   },
   "devDependencies": {
-    "jest": "^24.9.0",
-    "@babel/preset-react": "^7.0.0"
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.0.0",
+    "jest": "^24.9.0"
   },
   "scripts": {
     "start": "react-scripts start",
