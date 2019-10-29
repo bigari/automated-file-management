@@ -4,4 +4,3 @@ README.md
 .git
 npm-debug.log
 .dockerignore
-package-lock.json
