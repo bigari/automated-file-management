@@ -16,7 +16,8 @@ pipeline {
                 }
             }
             steps{
-                sh 'npm run test && exit'   
+                sh 'cd /usr/src/app && npm run test'
+                sh 'exit'   
             }
         }
         stage('Frontend tests') {
@@ -27,7 +28,8 @@ pipeline {
                 }
             }
             steps{
-                sh 'npm run test && exit' 
+                sh 'cd /usr/src/app && npm run test'
+                sh 'exit' 
             }
         }
         stage("Clean"){
