@@ -33,7 +33,7 @@ pipeline {
                     }
                     steps{
                         // sh 'cd /usr/src/app && npm run test'
-                        // sh 'exit 0' 
+                        sh 'exit 0' 
                     }
                 }
             }
