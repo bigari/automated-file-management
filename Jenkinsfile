@@ -20,7 +20,7 @@ pipeline {
                     }
                     steps{
                         sh 'cd /usr/src/app && npm run test'
-                        sh 'exit'   
+                        sh 'exit 1'   
                     }
                 }
                 stage('Frontend tests') {
@@ -32,7 +32,7 @@ pipeline {
                     }
                     steps{
                         sh 'cd /usr/src/app && npm run test'
-                        sh 'exit' 
+                        sh 'exit 1' 
                     }
                 }
             }
