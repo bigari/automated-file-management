@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const db = require('./server/models/index');
 
 // Set up the express app
 const app = express();
