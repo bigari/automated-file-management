@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  db:
+    image: postgres:12.0-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=afmdev
+      - POSTGRES_PASSWORD=afmdevpass
+      - POSTGRES_DB=afmdb
+    volumes:
+      - ./backend/__postgres-data__:/var/lib/postgresql/data
+    expose:
+      - 5432
+
   rest-api:
     env_file:
       - ./backend/.env.dev
@@ -8,7 +20,9 @@ services:
     volumes:
       - ./backend:/usr/src/app
     ports:
-      - 5002:5002 
+      - 5002:5002
+    depends_on:
+      - db 
 
   webapp:
     build: ./frontend

@@ -9,11 +9,22 @@ const db = {};
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable]);
+  sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+  console.log("not happy");
+
 } else {
   sequelize = new Sequelize(
     config.database, config.username, config.password, config
   );
 }
+
 
 fs
   .readdirSync(__dirname)

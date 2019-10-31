@@ -5,13 +5,14 @@
 ### Backend
 
 ```bash
-cd backend
-touch .env
-cat .env.example > .env
+mkdir backend/__postgres-data__
 ```
-Then fill the blank by your specific configuration.
-Changing the preset variables could lead to docker misconfiguration.
+### Global
+```bash
+chmod +x run.sh
+```
 
+To deploy the app you need to configure the app in /backend/.env.prod
 ## Run
 
 To run the frontend alone in a docker container
@@ -22,18 +23,16 @@ docker build -t afm-frontend .
 docker run -it -v $(pwd):/usr/src/app -p 3000:3000 afm-frontend
 ```
 
-To run the backend alone in a docker container
+To run the backend alone
 
 ```bash
 cd backend
-docker build -t afm-backend .
-docker run -it -v $(pwd):/usr/src/app -p 5002:5002 --env-file .env.dev afm-backend
+docker-compose up
 ```
 
 To run the whole app in dev mode
 
 ```bash
-sudo chmod +x run.sh
 ./run.sh -d
 ```
 
