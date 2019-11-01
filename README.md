@@ -2,7 +2,7 @@
 
 ## Setup
 
-### Backend
+### Backend 
 
 ```bash
 mkdir backend/__postgres-data__
