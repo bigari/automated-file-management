@@ -4,3 +4,4 @@ README.md
 .git
 npm-debug.log
 .dockerignore
+__postgres-data__
