@@ -1,17 +1,26 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import Copyright from './Copyright'
-import useStyles from './useStyles'
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Box from "@material-ui/core/Box";
+import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+import Copyright from "./Copyright";
+import useStyles from "./useStyles";
+import { observer } from "mobx-react";
+import { Redirect } from "react-router";
 
-
-export default function Signup() {
+const Signup = observer(props => {
   const classes = useStyles();
+  const userStore = props.userStore;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+
+  if (userStore.isLoggedIn) {
+    return <Redirect to="/workspace" />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -20,8 +29,15 @@ export default function Signup() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
-        <TextField
+        <form
+          className={classes.form}
+          noValidate
+          onSubmit={e => {
+            userStore.signup(username, email, password);
+            e.preventDefault();
+          }}
+        >
+          <TextField
             variant="outlined"
             margin="normal"
             required
@@ -29,8 +45,9 @@ export default function Signup() {
             id="username"
             label="Username"
             name="username"
+            onChange={e => setUsername(e.target.value)}
             autoFocus
-        />
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -40,6 +57,7 @@ export default function Signup() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            onChange={e => setEmail(e.target.value)}
             autoFocus
           />
           <TextField
@@ -50,6 +68,7 @@ export default function Signup() {
             name="password"
             label="Password"
             type="password"
+            onChange={e => setPassword(e.target.value)}
             id="password"
             autoComplete="current-password"
           />
@@ -64,7 +83,7 @@ export default function Signup() {
           </Button>
           <Box mt={2}>
             <Link href="/signin" variant="body2">
-                {"Already have an account? Sign in"}
+              {"Already have an account? Sign in"}
             </Link>
           </Box>
         </form>
@@ -74,4 +93,6 @@ export default function Signup() {
       </Box>
     </Container>
   );
-}
+});
+
+export default Signup;
