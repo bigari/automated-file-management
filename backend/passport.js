@@ -23,7 +23,7 @@ passport.use(new JwtStrategy({
     try{
         // Find the user specified in the token
         const user = await User.findOne({ where : { id: payload.sub } });
-        if(!use) {
+        if(!user) {
             return done(null, false);
         }
         done(null, user);

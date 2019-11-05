@@ -7,9 +7,7 @@ services:
     environment:
       - POSTGRES_USER=afmdev
       - POSTGRES_PASSWORD=afmdevpass
-      - POSTGRES_DB=afmdb
-    volumes:
-      - ./backend/__postgres-data__:/var/lib/postgresql/data
+      - POSTGRES_DB=afmtestdb
     expose:
       - 5432
 
