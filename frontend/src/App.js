@@ -1,25 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Home from "./components/Home";
+import Signin from "./components/Signin";
+import Signup from "./components/Signup";
+import { createMuiTheme } from "@material-ui/core/styles";
+import deepPurple from "@material-ui/core/colors/deepPurple";
+import { ThemeProvider } from "@material-ui/core/styles";
+import Workspace from "./components/Workspace";
+import rootStore from "./repositories/mobx/RootStore";
+
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: deepPurple
+  }
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Switch>
+          <Route path="/signin">
+            <Signin userStore={rootStore.userStore} />
+          </Route>
+          <Route path="/signup">
+            <Signup userStore={rootStore.userStore} />
+          </Route>
+          <Route path="/workspace">
+            <Workspace />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+      </Router>
+    </ThemeProvider>
   );
 }
 
