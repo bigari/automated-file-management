@@ -53,8 +53,8 @@ module.exports = {
                 attributes: ['username', 'email']
             });
 
-            if(users.lenght != 0) {
-                if(users.lenght == 2) {
+            if(users.length != 0) {
+                if(users.length == 2) {
                     res.status(422).send({ errors: {
                         username: 'Username already in use',
                         email: 'Email already in use'
