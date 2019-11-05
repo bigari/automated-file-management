@@ -1,12 +1,4 @@
-FROM node:12-alpine
-RUN apk add --no-cache --virtual .gyp \
-        python \
-        make \
-        g++ \
-    && npm install \
-        bcrypt \
-    && apk del .gyp
-
+FROM node:12.13.0
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm i
