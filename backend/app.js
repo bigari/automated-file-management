@@ -13,11 +13,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.post('/signin', passport.authenticate('local', { session: false })
+app.post('/signin', [
+    check('email').isEmail(),
+    check('password').exists()
+], passport.authenticate('local', { session: false })
 , userController.signin.bind(userController));
 
 app.post('/signup', [
-    check('email').isEmail()
+    check('email').isEmail(),
+    check('username').exists(),
+    check('password').exists()
 ], userController.signup.bind(userController));
 
 

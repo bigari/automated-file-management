@@ -6,6 +6,10 @@ const JWT = require('jsonwebtoken');
 const jwtSecret = process.env['JWT_SECRET'];
 const jwtExpiration = 3600
 
+
+const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {return msg;}
+
+
 module.exports = {
 
     hashPassword: async function(password) {
@@ -33,9 +37,9 @@ module.exports = {
 
     signup: async function(req, res) {
 
-        const errs = validationResult(req);
+        const errs = validationResult(req).formatWith(errorFormatter);
         if(!errs.isEmpty()) {
-            return res.status(422).json({ errors: errs.array()});
+            return res.status(422).json({ errors: errs.mapped() });
         }
 
         const email = req.body.email;
@@ -49,17 +53,23 @@ module.exports = {
                 attributes: ['username', 'email']
             });
 
-            console.log(users)
             if(users.lenght != 0) {
                 if(users.lenght == 2) {
-                    res.status(422).send({ error: 'Email and username already in use' });
+                    res.status(422).send({ errors: {
+                        username: 'Username already in use',
+                        email: 'Email already in use'
+                    }});
                     return;
                 } 
                 if(users[0].username == username) {
-                    res.status(422).send({ error: 'Username already in use' });
+                    res.status(422).send({ errors: {
+                        username: 'Username already in use'
+                    }});
                     return;
                 }
-                res.status(422).send({ error: 'Email already in use' });
+                res.status(422).send({ errors: {
+                    email: 'Email already in use'
+                }});
                 return;
             }
 
