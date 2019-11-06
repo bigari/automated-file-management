@@ -36,12 +36,14 @@ module.exports = {
         const password = req.body.password;
 
         try{
-            const user = await User.findOne({ email: email });
+            const user = await User.findOne({ where: {
+                email: email
+            }});
+            
             if(!user) {
                 res.status(422).set('Content-Type', 'application/json').send({ error: 'Incorrect email or password.' });
                 return;
             }
-    
             const isValid = await this.isValidPassword(password, user.password);
     
             if(!isValid) {
@@ -49,7 +51,7 @@ module.exports = {
                 return;
             }
 
-            res.status(200).set('Content-Type', 'application/json').send({ message: `Welcome ${user.username}` });
+            res.status(200).set('Content-Type', 'application/json').send({ user: user });
 
         }catch(err) {
             // Log the error
@@ -69,7 +71,6 @@ module.exports = {
         const password = req.body.password;
 
         try {
-            // check if email already exists in database (hash password)
             let users = await User.findAll({
                 where: {[Sequelize.Op.or]: [{username: username}, {email: email}]},
                 attributes: ['username', 'email']
@@ -113,7 +114,9 @@ module.exports = {
                 secure: true,
                 httpOnly: true
             });
-            res.end();
+
+            res.status(200).set('Content-Type', 'application/json').send({ user: user });
+
         }catch(error) {
             console.error(error);
             res.end();
