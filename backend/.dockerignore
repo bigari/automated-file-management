@@ -5,3 +5,4 @@ README.md
 npm-debug.log
 .dockerignore
 __postgres-data__
+coverage

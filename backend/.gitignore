@@ -1,3 +1,4 @@
 .env
 .env.prod
 __postgres-data__
+coverage
