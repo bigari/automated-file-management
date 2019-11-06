@@ -31,8 +31,30 @@ module.exports = {
         return bcrypt.compare(password, hash);
     },
 
-    signin: function(req, res) {
-        res.status(200).send({ message: `Welcome ${req.user.username}` });
+    signin: async function(req, res) {
+        const email = req.body.email;
+        const password = req.body.password;
+
+        try{
+            const user = await User.findOne({ email: email });
+            if(!user) {
+                res.status(422).set('Content-Type', 'application/json').send({ error: 'Incorrect email or password.' });
+                return;
+            }
+    
+            const isValid = await this.isValidPassword(password, user.password);
+    
+            if(!isValid) {
+                res.status(422).set('Content-Type', 'application/json').send({ error: 'Incorrect email or password.' });
+                return;
+            }
+
+            res.status(200).set('Content-Type', 'application/json').send({ message: `Welcome ${user.username}` });
+
+        }catch(err) {
+            // Log the error
+            res.status(500).set('Content-Type', 'application/json').send({ error: 'An error has occurred, please try again later.' });
+        }
     }, 
 
     signup: async function(req, res) {
@@ -73,8 +95,7 @@ module.exports = {
                 return;
             }
 
-            // const passwordHash = await this.hashPassword(password);
-            const passwordHash = password;
+            const passwordHash = await this.hashPassword(password);
 
             // persist in database
             let user = await User.create({

@@ -33,27 +33,4 @@ passport.use(new JwtStrategy({
     }
 }));
 
-passport.use(new LocalStrategy({
-    usernameField: 'email'
-}, async (email, password, done) => {
-    try{
-        const user = await User.findOne({ email: email});
-        if(!user) {
-            return done(null, false);
-        }
-
-        // const isValid = await User.isValidPassword(password, user.password);
-
-        // if(!isValid) {
-        //     return done(null, false);
-        // }
-
-        done(null, user);
-
-    }catch(error) {
-        done(error, false);
-    }
-}));
-
-
 module.exports = passport;

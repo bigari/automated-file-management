@@ -16,8 +16,7 @@ app.use(cookieParser());
 app.post('/signin', [
     check('email').isEmail(),
     check('password').exists()
-], passport.authenticate('local', { session: false })
-, userController.signin.bind(userController));
+], userController.signin.bind(userController));
 
 app.post('/signup', [
     check('email').isEmail(),
