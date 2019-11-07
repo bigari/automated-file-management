@@ -31,8 +31,40 @@ module.exports = {
         return bcrypt.compare(password, hash);
     },
 
-    signin: function(req, res) {
-        res.status(200).send({ message: `Welcome ${req.user.username}` });
+    signin: async function(req, res) {
+        const email = req.body.email;
+        const password = req.body.password;
+
+        console.log(req.body)
+        console.log(req.headers['content-type'])
+        console.log(email);
+        console.log(password);
+
+        try{
+            const user = await User.findOne({ where: {
+                email: email
+            }});
+            
+            console.log(user)
+
+            if(!user) {
+                res.status(422).set('Content-Type', 'application/json').send({ error: 'Incorrect email or password.' });
+                return;
+            }
+            const isValid = await this.isValidPassword(password, user.password);
+    
+            if(!isValid) {
+                res.status(422).set('Content-Type', 'application/json').send({ error: 'Incorrect email or password.' });
+                return;
+            }
+
+            res.status(200).set('Content-Type', 'application/json').send({ user: user });
+
+        }catch(err) {
+            // Log the error
+            // console.log(err);
+            res.status(500).set('Content-Type', 'application/json').send({ error: 'An error has occurred, please try again later.' });
+        }
     }, 
 
     signup: async function(req, res) {
@@ -47,7 +79,6 @@ module.exports = {
         const password = req.body.password;
 
         try {
-            // check if email already exists in database (hash password)
             let users = await User.findAll({
                 where: {[Sequelize.Op.or]: [{username: username}, {email: email}]},
                 attributes: ['username', 'email']
@@ -73,8 +104,7 @@ module.exports = {
                 return;
             }
 
-            // const passwordHash = await this.hashPassword(password);
-            const passwordHash = password;
+            const passwordHash = await this.hashPassword(password);
 
             // persist in database
             let user = await User.create({
@@ -92,7 +122,9 @@ module.exports = {
                 secure: true,
                 httpOnly: true
             });
-            res.end();
+
+            res.status(200).set('Content-Type', 'application/json').send({ user: user });
+
         }catch(error) {
             console.error(error);
             res.end();

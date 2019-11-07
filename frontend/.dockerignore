@@ -4,3 +4,4 @@ README.md
 .git
 npm-debug.log
 .dockerignore
+coverage

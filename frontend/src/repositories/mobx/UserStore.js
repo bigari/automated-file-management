@@ -2,16 +2,11 @@ import { observable, action, computed, runInAction, decorate } from "mobx";
 import client from "../client";
 
 export class UserStore {
-  email;
-  userName;
+  user;
   jwt;
   signinError;
   signupError;
   rootStore;
-
-  constructor(rootStore) {
-    this.rootStore = rootStore;
-  }
 
   get isLoggedIn() {
     return !(this.jwt == null);
@@ -26,19 +21,11 @@ export class UserStore {
         email: email,
         password: password
       })
-      .unauthorized(_ => {
-        runInAction(() => {
-          this.signinError = "Unauthorized";
-        });
-      })
-      .json(json => {
-        runInAction(() => {
-          this.email = email;
-          this.userName = json.userName;
-          this.signinError = null;
-          this.jwt = json.jwt;
-          client.addJwt(this.jwt);
-        });
+    .json(json => {
+        // runInAction(() => {
+        this.user = json.user
+        this.signinError = null
+        // });
       });
   }
 
@@ -52,21 +39,16 @@ export class UserStore {
         });
       })
       .json(json => {
-        runInAction(() => {
-          this.id = json.id;
-          this.email = email;
-          this.userName = json.userName;
-          this.signupError = null;
-          this.jwt = json.jwt;
-          client.addJwt(this.jwt);
-        });
+        // runInAction(() => {
+          this.user = json.user;
+          this.signupError = null
+        // });
       });
   }
 }
 
 decorate(UserStore, {
-  email: observable,
-  userName: observable,
+  user: observable,
   jwt: observable,
   isLoggedIn: computed,
   signinError: observable,
