@@ -13,8 +13,6 @@ export class UserStore {
   }
 
   signin(email, password) {
-    console.log(email);
-    console.log(password);
     client
       .url("/signin")
       .post({
