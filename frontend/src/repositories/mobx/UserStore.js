@@ -1,12 +1,10 @@
 import { observable, action, computed, runInAction, decorate } from "mobx";
-import { UserApi } from "./UserApi";
-import client from "../../network/client";
+import client from "../client";
 
 export class UserStore {
   email;
   userName;
   jwt;
-  api = new UserApi();
   signinError;
   signupError;
   rootStore;
@@ -22,8 +20,8 @@ export class UserStore {
   signin(email, password) {
     console.log(email);
     console.log(password);
-    this.api
-      .signin()
+    client
+      .url("/signin")
       .post({
         email: email,
         password: password
@@ -45,8 +43,8 @@ export class UserStore {
   }
 
   signup(username, email, password) {
-    this.api
-      .signup()
+    client
+      .url("/signup")
       .post({ username: username, email: email, password: password })
       .error(400, err => {
         runInAction(() => {

@@ -1,4 +1,4 @@
-import { UserStore } from "./user/UserStore";
+import { UserStore } from "./UserStore";
 
 class RootStore {
   constructor() {
