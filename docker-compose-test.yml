@@ -21,6 +21,8 @@ services:
       - db
 
   webapp:
+    env_file:
+      - ./frontend/.env
     build: ./frontend
     ports:
       - 5001:3000

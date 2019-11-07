@@ -35,11 +35,18 @@ module.exports = {
         const email = req.body.email;
         const password = req.body.password;
 
+        console.log(req.body)
+        console.log(req.headers['content-type'])
+        console.log(email);
+        console.log(password);
+
         try{
             const user = await User.findOne({ where: {
                 email: email
             }});
             
+            console.log(user)
+
             if(!user) {
                 res.status(422).set('Content-Type', 'application/json').send({ error: 'Incorrect email or password.' });
                 return;
@@ -55,6 +62,7 @@ module.exports = {
 
         }catch(err) {
             // Log the error
+            // console.log(err);
             res.status(500).set('Content-Type', 'application/json').send({ error: 'An error has occurred, please try again later.' });
         }
     }, 

@@ -37,10 +37,10 @@ const Home = () => {
           <Typography variant="h6" className={classes.title}>
             File Flow
           </Typography>
-          <Link to="/signin" style={{ decoration: "#none", color: "white" }}>
+          <Link to="/signin" style={{ textDecoration: "none", color: "white" }}>
             <Button color="inherit">Signin</Button>
           </Link>
-          <Link to="/signup" style={{ decoration: "#none", color: "white" }}>
+          <Link to="/signup" style={{ textDecoration: "none", color: "white" }}>
             <Button color="inherit">Signup</Button>
           </Link>
         </Toolbar>
