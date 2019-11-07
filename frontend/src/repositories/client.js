@@ -1,15 +1,7 @@
 import wretch from "wretch";
 
-class Client {
-  api = wretch()
-    .url("http://localhost:5002")
-    .options({ credentials: "include", mode: "cors" });
-
-  addJwt(jwt) {
-    this.api = this.api.auth("Bearer " + jwt);
-  }
-}
-
-const client = new Client();
+const client = wretch()
+  .url("http://localhost:5002")
+  .options({ credentials: "include", mode: "cors" });
 
 export default client;
