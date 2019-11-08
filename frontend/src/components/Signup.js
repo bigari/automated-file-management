@@ -14,6 +14,11 @@ import { Redirect } from "react-router";
 const Signup = observer(props => {
   const classes = useStyles();
   const userStore = props.userStore;
+  const usernameError = userStore.signupErrors.username;
+  const emailError = userStore.signupErrors.email;
+  const passwordError = userStore.signupErrors.password;
+  const internalError = userStore.signupErrors.internal;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -33,13 +38,23 @@ const Signup = observer(props => {
           className={classes.form}
           noValidate
           onSubmit={e => {
-            userStore.signup(username, email, password);
+            if(email && password && email) {
+              userStore.signupErrors = {
+                password: '',
+                username: '',
+                email: '',
+                internal: ''  
+              }
+              userStore.signup(username, email, password);
+            }
             e.preventDefault();
           }}
         >
           <TextField
             variant="outlined"
             margin="normal"
+            error={usernameError? true:false}
+            helperText={usernameError}
             required
             fullWidth
             id="username"
@@ -53,6 +68,8 @@ const Signup = observer(props => {
             margin="normal"
             required
             fullWidth
+            error={emailError? true:false}
+            helperText={emailError}
             id="email"
             label="Email Address"
             name="email"
@@ -65,6 +82,8 @@ const Signup = observer(props => {
             margin="normal"
             required
             fullWidth
+            error={passwordError? true:false}
+            helperText={passwordError}
             name="password"
             label="Password"
             type="password"
@@ -81,6 +100,7 @@ const Signup = observer(props => {
           >
             Sign up
           </Button>
+          <div>{internalError}</div>
           <Box mt={2}>
             <Link href="/signin" variant="body2">
               {"Already have an account? Sign in"}
