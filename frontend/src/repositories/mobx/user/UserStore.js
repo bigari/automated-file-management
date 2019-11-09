@@ -4,8 +4,7 @@ import {
   computed,
   decorate
 } from "mobx";
-import wretch from "wretch";
-
+import client from '../../client';
 
 export class UserStore {
   user;
@@ -22,11 +21,9 @@ export class UserStore {
   }
 
   signin(email, password) {
-    wretch().url(`http://localhost:5002/signin`)
+    client.url('/signin')
       .options({
         method: 'POST',
-        mode: "cors",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         }
@@ -47,13 +44,10 @@ export class UserStore {
       });
   }
 
-  // refresh token for re-auth
-
   signup(username, email, password) {
-    wretch(`http://localhost:5002/signup`)
+    client.url('/signup')
       .options({
         method: 'POST',
-        mode: "cors",
         headers: {
           "Content-Type": "application/json"
         }
