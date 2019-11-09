@@ -12,11 +12,15 @@ module.exports = (sequelize, DataTypes) => {
       notNull: true
     },
     password: DataTypes.STRING,
-    created_at: DataTypes.DATE
-  }, {timestamps: false});
+    createdAt: DataTypes.DATE
+  }, {});
   
   User.associate = function(models) {
     // associations can be defined here
+    User.hasMany(models.Workspace, {
+      foreignKey: "ownerId",
+      as: "workspaces"
+    });
   };
   return User;
 };
