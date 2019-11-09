@@ -3,6 +3,7 @@ import "./App.css";
 import Home from "./components/Home";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
+import Workspaces from './components/Workspaces'
 import { createMuiTheme } from "@material-ui/core/styles";
 import deepPurple from "@material-ui/core/colors/deepPurple";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -22,6 +23,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
+          <Route path="/workspaces">
+            <Workspaces />
+          </Route>
           <Route path="/signin">
             <Signin userStore={rootStore.userStore} />
           </Route>
