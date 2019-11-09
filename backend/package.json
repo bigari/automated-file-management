@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon ./bin/www",
+    "start:dev": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all --debug && nodemon ./bin/www",
     "test": "jest --runInBand"
   },
   "keywords": [],
