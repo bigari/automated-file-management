@@ -6,13 +6,13 @@ const JWT = require("jsonwebtoken");
 const jwtSecret = process.env["JWT_SECRET"];
 const jwtExpiration = 3600;
 
-const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
+const errorFormatter = ({ msg }) => {
   return msg;
 };
 
 module.exports = {
   hashPassword: async function(password) {
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(saltRounds);
     const passwordHash = await bcrypt.hash(password, salt);
     return passwordHash;
   },
@@ -63,19 +63,21 @@ module.exports = {
 
       const jwtToken = await this.genToken(user.id);
 
-      res.cookie("jwt", jwtToken, {
-        maxAge: jwtExpiration * 1000,
-        secure: true,
-        httpOnly: true
+      res.cookie("jwt", 
+        jwtToken, {
+          maxAge: jwtExpiration * 1000,
+          secure: false,
+          httpOnly: true
       });
 
-      user.dataValues.jwt = jwtToken;
-      delete user.dataValues.password
+      // user.dataValues.jwt = jwtToken;
+      // delete user.dataValues.password
 
       res
         .status(200)
         .set("Content-Type", "application/json")
         .send({ user: user });
+
     } catch (err) {
       res
         .status(500)
@@ -157,5 +159,19 @@ module.exports = {
       console.error(error);
       res.end();
     }
+  },
+
+  logout: (req, res, next) => {
+    res.clearCookie('jwt', {
+      secure: true,
+      httpOnly: true
+    })
+    res.end();
+  },
+
+  validateCookie: (req, res) => {
+    const user = req.user;
+    delete user.password;
+    res.status(200).send({user: req.user});
   }
 };

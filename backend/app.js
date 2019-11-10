@@ -42,6 +42,11 @@ app.post(
 );
 
 app.post(
+  "/logout",
+  userController.logout
+);
+
+app.post(
   "/workspaces",
   passport.authenticate("jwt", { session: false }),
   workspaceController.create.bind(workspaceController)
@@ -56,6 +61,11 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   workspaceController.listAsOwner.bind(workspaceController)
 );
+
+app.get('/validateCookie', 
+  passport.authenticate("jwt", {session: false}),
+  userController.validateCookie
+)
 
 
 module.exports = app;

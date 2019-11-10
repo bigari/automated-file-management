@@ -22,7 +22,7 @@ const Signin = observer(props => {
   const [password, setPassword] = useState('')
 
   if (userStore.isLoggedIn) {
-    return <Redirect to="/workspace" />;
+    return <Redirect to="/workspaces" />;
   }
 
   return (

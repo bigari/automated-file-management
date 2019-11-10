@@ -15,9 +15,13 @@ export class UserStore {
     email: '',
     internal: ''  
   }
+  
+  constructor() {
+    this.validateCookie();
+  }
 
   get isLoggedIn() {
-    return false;
+    return this.user? true:false;
   }
 
   signin(email, password) {
@@ -60,7 +64,6 @@ export class UserStore {
       .error(422, ({text}) => {
         let errs = JSON.parse(text).errors;
         this.signupErrors = {...this.signupErrors, ...errs};
-        console.log(this.signupErrors)
       })
       .error(500, ({text}) => {
         this.signupErrors.internal = JSON.parse(text).errors.internal;
@@ -75,6 +78,30 @@ export class UserStore {
         }
       });
   }
+
+  logout() {
+    // invalidate cookie && invalidate user obj
+    this.user = null;
+    client.url('/logout').options({method: 'POST'})
+      .post()
+      .res((response) => {
+        //redirect
+        console.log('disconnected')
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+  }
+
+  validateCookie() {
+    client.url('/validateCookie')
+    .options({ method: 'get'})
+    .get()
+    .json(({user}) => {
+      this.user = user
+    })
+    .catch((error) => {})
+  }
 }
 
 decorate(UserStore, {
@@ -83,5 +110,7 @@ decorate(UserStore, {
   signinError: observable,
   signupErrors: observable,
   signin: action,
-  signup: action
+  signup: action,
+  logout: action,
+  validateCookie: action
 });

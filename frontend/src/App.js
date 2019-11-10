@@ -24,7 +24,7 @@ function App() {
       <Router>
         <Switch>
           <Route path="/workspaces">
-            <Workspaces />
+            <Workspaces userStore={rootStore.userStore}/>
           </Route>
           <Route path="/signin">
             <Signin userStore={rootStore.userStore} />
@@ -36,7 +36,7 @@ function App() {
             <Workspace />
           </Route>
           <Route path="/">
-            <Home />
+            <Home userStore={rootStore.userStore}/>
           </Route>
         </Switch>
       </Router>

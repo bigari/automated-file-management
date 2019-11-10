@@ -29,13 +29,12 @@ const useStyles = makeStyles({
 const WorkspaceCard = function(props) {
     const classes = useStyles();
     const workspace = props.workspace;
-    const open = () => {console.log(JSON.stringify(workspace))}
 
     return (
-        <Card className={classes.card} onClick={open()}>
+        <Card className={classes.card}>
             <CardContent>
-                <Typography className={classes.title}>
-                    {workspace.title}
+                <Typography className={classes.name}>
+                    {workspace.name}
                 </Typography>
             </CardContent>
         </Card>
