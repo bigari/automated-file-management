@@ -163,7 +163,7 @@ module.exports = {
 
   logout: (req, res, next) => {
     res.clearCookie('jwt', {
-      secure: true,
+      secure: false,
       httpOnly: true
     })
     res.end();
