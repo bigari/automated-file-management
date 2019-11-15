@@ -10,7 +10,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import Workspace from "./components/Workspace";
 import rootStore from "./repositories/mobx/RootStore";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 const theme = createMuiTheme({
   palette: {
@@ -18,25 +18,47 @@ const theme = createMuiTheme({
   }
 });
 
+const userStore = rootStore.userStore;
+
+function PrivateRoute({ children, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+          userStore.isLoggedIn ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/signin",
+              state: { referrer: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
-          <Route path="/workspaces">
-            <Workspaces userStore={rootStore.userStore}/>
-          </Route>
+          <PrivateRoute path="/workspaces">
+            <Workspaces userStore={userStore}/>
+          </PrivateRoute>
           <Route path="/signin">
-            <Signin userStore={rootStore.userStore} />
+            <Signin userStore={userStore} />
           </Route>
           <Route path="/signup">
-            <Signup userStore={rootStore.userStore} />
+            <Signup userStore={userStore} />
           </Route>
-          <Route path="/workspace">
+          <PrivateRoute path="/workspace">
             <Workspace />
-          </Route>
+          </PrivateRoute>
           <Route path="/">
-            <Home userStore={rootStore.userStore}/>
+            <Home userStore={userStore}/>
           </Route>
         </Switch>
       </Router>

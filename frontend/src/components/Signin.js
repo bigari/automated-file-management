@@ -12,17 +12,21 @@ import Container from "@material-ui/core/Container";
 import Copyright from "./Copyright";
 import useStyles from "./useStyles";
 import { observer } from "mobx-react";
-import { Redirect } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 const Signin = observer(props => {
   const classes = useStyles();
   const userStore = props.userStore;
+  const location = useLocation();
+  const history = useHistory();
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  let { referrer } = location.state || { referrer: { pathname: '/workspaces' } };
+
   if (userStore.isLoggedIn) {
-    return <Redirect to="/workspaces" />;
+    history.replace(referrer);
   }
 
   return (

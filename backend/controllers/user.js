@@ -70,8 +70,8 @@ module.exports = {
           httpOnly: true
       });
 
-      // user.dataValues.jwt = jwtToken;
-      // delete user.dataValues.password
+      user.dataValues.jwt = jwtToken;
+      delete user.dataValues.password
 
       res
         .status(200)

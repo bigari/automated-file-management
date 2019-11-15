@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { observer } from "mobx-react";
 
 const useStyles = makeStyles(theme => ({
@@ -27,6 +27,7 @@ const useStyles = makeStyles(theme => ({
 const NavBar = observer((props) => {
     const classes = useStyles();
     const userStore = props.userStore;
+    const history = useHistory();
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = event => {
@@ -41,7 +42,9 @@ const NavBar = observer((props) => {
 
     const logout = () => {
       setAnchorEl(null);
-      userStore.logout();
+      userStore.logout().then(() => {
+        history.push('/')
+      });
     }
 
     const navigateToAccount = () => {

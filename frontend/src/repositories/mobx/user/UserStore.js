@@ -81,12 +81,12 @@ export class UserStore {
 
   logout() {
     // invalidate cookie && invalidate user obj
-    this.user = null;
-    client.url('/logout').options({method: 'POST'})
+    return client.url('/logout').options({method: 'POST'})
       .post()
       .res((response) => {
+        this.user = null;
         //redirect
-        console.log('disconnected')
+        console.log('disconnected');
       })
       .catch((error) => {
         console.log(error)
