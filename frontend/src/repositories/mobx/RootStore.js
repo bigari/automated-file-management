@@ -1,10 +1,10 @@
 import { UserStore } from "./user/UserStore";
-//import { WorkspaceStore } from "./WorkspaceStore";
+import { WorkspaceStore } from "./workspace/WorkspaceStore";
 
 class RootStore {
   constructor() {
-    this.userStore = new UserStore();
-   // this.workspaceStore = new WorkspaceStore();
+    this.userStore = new UserStore(this);
+    this.workspaceStore = new WorkspaceStore(this);
   }
 }
 
