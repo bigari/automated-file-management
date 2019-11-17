@@ -9,6 +9,8 @@ import deepPurple from "@material-ui/core/colors/deepPurple";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Workspace from "./components/Workspace";
 import rootStore from "./repositories/mobx/RootStore";
+import { observer } from 'mobx-react';
+
 
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
@@ -19,26 +21,38 @@ const theme = createMuiTheme({
 });
 
 const userStore = rootStore.userStore;
+const workspaceStore = rootStore.workspaceStore;
 
-function PrivateRoute({ children, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-          userStore.isLoggedIn ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/signin",
-              state: { referrer: location }
-            }}
-          />
-        )
-      }
-    />
-  );
-}
+const PrivateRoute = observer(({ children, ...rest }) => {
+  const render = ({location}) => {
+    if (userStore.isLoggedIn){
+      return (children)
+    }
+
+    else{ 
+      return (
+        <Redirect
+          to={{
+            pathname: "/signin",
+            state: { referrer: location }
+          }}
+        />
+      )
+    }
+  }
+
+  if (userStore.isPending) {
+    return (<div>Loading...</div>)
+  }
+  else{
+    return (
+      <Route
+        {...rest}
+        render={render}
+      />
+    );
+  }
+})
 
 function App() {
   return (
@@ -46,7 +60,7 @@ function App() {
       <Router>
         <Switch>
           <PrivateRoute path="/workspaces">
-            <Workspaces userStore={userStore}/>
+            <Workspaces userStore={userStore} workspaceStore={workspaceStore}/>
           </PrivateRoute>
           <Route path="/signin">
             <Signin userStore={userStore} />

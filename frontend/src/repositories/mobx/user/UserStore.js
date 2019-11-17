@@ -8,6 +8,7 @@ import client from '../../client';
 
 export class UserStore {
   user;
+  pending = true;
   signinError;
   signupErrors = {
     password: '',
@@ -22,6 +23,11 @@ export class UserStore {
 
   get isLoggedIn() {
     return this.user? true:false;
+  }
+
+  // isPending is true if the call to validateCookie is yet to be resolved
+  get isPending() {
+    return Boolean(this.pending)
   }
 
   signin(email, password) {
@@ -94,19 +100,22 @@ export class UserStore {
   }
 
   validateCookie() {
+    this.pending = true
     client.url('/validateCookie')
-    .options({ method: 'get'})
     .get()
     .json(({user}) => {
+      this.pending = false
       this.user = user
     })
-    .catch((error) => {})
+    .catch((error) => {this.pending = false})
   }
 }
 
 decorate(UserStore, {
   user: observable,
+  pending: observable,
   isLoggedIn: computed,
+  isPending: computed,
   signinError: observable,
   signupErrors: observable,
   signin: action,
