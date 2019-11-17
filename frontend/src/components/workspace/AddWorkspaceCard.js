@@ -4,7 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import icon from "../icons/add-24px.svg";
+import icon from "../../icons/add-24px.svg";
 
 
 const useStyles = makeStyles({

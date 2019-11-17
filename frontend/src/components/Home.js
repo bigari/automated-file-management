@@ -13,7 +13,7 @@ const Home = (props) => {
           <p>Make your files flow to one place</p>
         </header>
       </div>
-      <Copyright />
+      <Copyright dark={true}/>
     </div>
   );
 };

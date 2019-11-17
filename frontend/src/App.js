@@ -1,13 +1,13 @@
 import React from "react";
 import "./App.css";
 import Home from "./components/Home";
-import Signin from "./components/Signin";
-import Signup from "./components/Signup";
-import Workspaces from './components/Workspaces'
+import Signin from "./components/user/Signin";
+import Signup from "./components/user/Signup";
+import Workspaces from './components/workspace/Workspaces'
 import { createMuiTheme } from "@material-ui/core/styles";
 import deepPurple from "@material-ui/core/colors/deepPurple";
 import { ThemeProvider } from "@material-ui/core/styles";
-import Workspace from "./components/Workspace";
+import Workspace from "./components/workspace/Workspace";
 import rootStore from "./repositories/mobx/RootStore";
 import { observer } from 'mobx-react';
 

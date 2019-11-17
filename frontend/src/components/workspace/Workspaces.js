@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
-import NavBar from './NavBar';
+import NavBar from '../NavBar';
 
 const useStyles = makeStyles(theme => ({
     container: {
