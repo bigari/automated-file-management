@@ -18,7 +18,7 @@ const useStyles = makeStyles({
         'padding-left': '20px',
         cursor: 'pointer',
         '&:hover': {
-            background: '#E6E2E4'
+            background: '#DDFFDD'
         },
         display: 'flex',
         'flex-direction': 'column',
