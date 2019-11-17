@@ -2,7 +2,7 @@ const { Workspace, Member } = require("../database/models/index");
 
 const ROLES = {
   "1": "owner",
-  "2": "sourcer",
+  "2": "manager",
   "3": "member"
 };
 
