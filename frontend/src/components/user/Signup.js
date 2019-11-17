@@ -9,7 +9,7 @@ import Container from "@material-ui/core/Container";
 import Copyright from "../Copyright";
 import useStyles from "./useStyles";
 import { observer } from "mobx-react";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 
 const Signup = observer(props => {
   const classes = useStyles();
