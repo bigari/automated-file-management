@@ -50,7 +50,7 @@ const AddWorkspaceCard = function(props) {
                 title="Add a workspace"
             />
             <CardContent>
-                <Typography className={classes.title}>
+                <Typography variant="subtitle1">
                     Add a workspace
                 </Typography>
             </CardContent>

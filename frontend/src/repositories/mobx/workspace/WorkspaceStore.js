@@ -1,6 +1,12 @@
 import { observable, action, computed, decorate, runInAction } from "mobx";
 import client from "../../client";
 
+export const ROLES = {
+  "1": "owner",
+  "2": "manager",
+  "3": "member"
+};
+
 export class WorkspaceStore {
   workspaces;
   isLoading;
@@ -17,7 +23,7 @@ export class WorkspaceStore {
     return this.workspaces.length;
   }
   get list() {
-    return Object.values(this.workspaces);
+    return Object.values(this.workspaces).sort( (w1, w2) => w1.roleId-w2.roleId);
   }
   fetchAll() {
     if (
@@ -30,9 +36,9 @@ export class WorkspaceStore {
         .json(json => {
           runInAction(() => {
             this.workspaces = {};
-            json.workspaces.forEach(
-              workspace => (this.workspaces[workspace.id] = workspace)
-            );
+            json.workspaces.forEach(workspace => {
+              this.workspaces[workspace.id] = workspace;
+            });
             this.isLoading.all = false;
           });
         });

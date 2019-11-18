@@ -1,10 +1,10 @@
 const { Workspace, Member } = require("../database/models/index");
 
-const ROLES = {
+/*const ROLES = {
   "1": "owner",
   "2": "manager",
   "3": "member"
-};
+};*/
 
 module.exports = {
   //List all workspaces current user owns
@@ -46,7 +46,7 @@ module.exports = {
       if (memberWorkspaces) {
         memberWorkspaces.forEach(memberWorkspace => {
           workspaces.push({
-            role: ROLES[memberWorkspace.roleId],
+            roleId: memberWorkspace.roleId,
             ...memberWorkspace.workspace.dataValues
           });
         });
