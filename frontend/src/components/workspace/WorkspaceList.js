@@ -22,12 +22,11 @@ const useStyles = makeStyles(theme => ({
 const WorkspaceList = observer(props => {
     const classes = useStyles();
     const workspaces = props.workspaces;
+    const workspaceStore = props.workspaceStore;
     
     return (
         <Grid container className={classes.root} spacing={2}>
-            <Grid item>
-                <AddWorkspaceCard />
-            </Grid>
+            <AddWorkspaceCard workspaceStore={workspaceStore} />
             {workspaces.map(workspace => (
                 <Grid item key={workspace.id}>
                     <WorkspaceCard workspace={workspace} />

@@ -63,16 +63,16 @@ module.exports = {
 
   create: async function(req, res) {
     const name = req.body.name;
-    const storageProvider = req.body.storageProvider;
-    const storageToken = req.body.storageToken;
+    // const storageProvider = req.body.storageProvider;
+    // const storageToken = req.body.storageToken;
 
     try {
       // persist in database
       const workspace = await Workspace.create({
         name: name,
-        ownerId: req.user.id,
-        storageToken: storageToken,
-        storageProvider: storageProvider
+        ownerId: req.user.id
+        // storageToken: storageToken,
+        // storageProvider: storageProvider
       });
 
       await Member.create({

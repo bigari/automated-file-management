@@ -40,7 +40,7 @@ const WorkspaceCard = function(props) {
     <Card className={classes.card}>
       <CardContent>
         <Box height={150} display="flex" alignItems="center">
-          <Box>
+          <Box mt={2}>
             <Typography variant="subtitle1">{workspace.name}</Typography>
           </Box>
         </Box>

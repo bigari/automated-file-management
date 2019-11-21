@@ -37,7 +37,7 @@ const Workspaces = observer(props => {
           <Typography variant="h6" className={classes.header}>
             Workspaces
           </Typography>
-          <WorkspaceList workspaces={workspaces} />
+          <WorkspaceList workspaces={workspaces} workspaceStore={workspaceStore}/>
         </Grid>
       </Container>
     </div>

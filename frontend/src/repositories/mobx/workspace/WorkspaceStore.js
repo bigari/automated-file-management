@@ -15,16 +15,52 @@ export class WorkspaceStore {
     this.root = root;
     this.workspaces = {};
     this.isLoading = {
-      all: true
+      all: true,
+      create: false
     };
+  }
+
+  get isCreating() {
+    return this.isLoading.create;
   }
 
   get count() {
     return this.workspaces.length;
   }
   get list() {
-    return Object.values(this.workspaces).sort( (w1, w2) => w1.roleId-w2.roleId);
+    return Object.values(this.workspaces).sort((w1, w2) => {
+      const diffRole = w1.roleId - w2.roleId;
+      if (diffRole === 0) {
+        const d1 = Date.parse(w1.createdAt);
+        const d2 = Date.parse(w2.createdAt);
+        if (d1 < d2) {
+          return 1;
+        } else if (d1 === d2) {
+          return 0;
+        } else if (d1 > d2) {
+          return -1;
+        }
+      }
+      return diffRole;
+    });
   }
+
+  create(name) {
+    this.isLoading.create = true;
+    return client.api
+      .url("/workspaces")
+      .post({
+        name: name
+      })
+      .json(json => {
+        runInAction(() => {
+          this.workspaces[json.workspace.id] = json.workspace;
+          this.workspaces[json.workspace.id].roleId = 1;
+          this.isLoading.create = false;
+        });
+      });
+  }
+
   fetchAll() {
     if (
       Object.keys(this.workspaces).length === 0 &&
@@ -49,6 +85,7 @@ export class WorkspaceStore {
 decorate(WorkspaceStore, {
   workspaces: observable,
   fetchAll: action,
+  create: action,
   count: computed,
   list: computed
 });
