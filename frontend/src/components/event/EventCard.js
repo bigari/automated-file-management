@@ -5,7 +5,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Box } from "@material-ui/core";
 import roleIcon from "../../icons/role512.png";
-import { ROLES } from "../../repositories/mobx/workspace/WorkspaceStore";
 
 const useStyles = makeStyles({
   card: {
@@ -26,30 +25,30 @@ const useStyles = makeStyles({
     "line-height": "5px"
   },
 
-  role: {
+  date: {
     "text-transform": "capitalize",
     "font-style": "italic"
   }
 });
 
-const WorkspaceCard = function(props) {
+const EventCard = function(props) {
   const classes = useStyles();
-  const workspace = props.workspace;
+  const event = props.event;
 
   return (
     <Card className={classes.card}>
       <CardContent>
         <Box height={150} display="flex" alignItems="center">
           <Box mt={2}>
-            <Typography variant="subtitle1">{workspace.name}</Typography>
+            <Typography variant="subtitle1">{event.name}</Typography>
           </Box>
         </Box>
         <Box height={50} display="flex">
           <Box mr={4}>
             <img src={roleIcon} alt="role" width={24} height={24} />
           </Box>
-          <Typography variant="caption" className={classes.role}>
-            {ROLES[workspace.roleId]}
+          <Typography variant="caption" className={classes.date}>
+            {event.startAt}
           </Typography>
         </Box>
       </CardContent>
@@ -57,4 +56,4 @@ const WorkspaceCard = function(props) {
   );
 };
 
-export default WorkspaceCard;
+export default EventCard;

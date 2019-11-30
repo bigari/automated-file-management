@@ -2,7 +2,7 @@ const express = require("express");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
 const userController = require("./controllers/user");
-const workspaceController = require("./controllers/workspace");
+const eventController = require("./controllers/event");
 const { check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const passport = require("./passport");
@@ -47,19 +47,14 @@ app.post(
 );
 
 app.post(
-  "/workspaces",
+  "/events",
   passport.authenticate("jwt", { session: false }),
-  workspaceController.create.bind(workspaceController)
+  eventController.create.bind(eventController)
 );
 app.get(
-  "/workspaces",
+  "/events",
   passport.authenticate("jwt", { session: false }),
-  workspaceController.list.bind(workspaceController)
-);
-app.get(
-  "/workspaces/owned",
-  passport.authenticate("jwt", { session: false }),
-  workspaceController.listAsOwner.bind(workspaceController)
+  eventController.list.bind(eventController)
 );
 
 app.get('/validateCookie', 

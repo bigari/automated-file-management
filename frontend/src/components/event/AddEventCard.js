@@ -38,11 +38,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AddWorkspaceCard = function(props) {
+const AddEventCard = function(props) {
   const classes = useStyles();
-  const workspaceStore = props.workspaceStore;
+  const eventStore = props.eventStore;
   const [isAdding, setIsAdding] = useState(false);
-  const [workspaceName, setWorskspaceName] = useState("");
+  const [eventName, setWorskspaceName] = useState("");
 
   const handleCancel = () => {
     setIsAdding(false);
@@ -50,18 +50,18 @@ const AddWorkspaceCard = function(props) {
 
   const handleCreate = () => {
     setWorskspaceName("");
-    workspaceStore.create(workspaceName);
+    eventStore.create(eventName);
     setIsAdding(false);
   };
 
-  const addWorkspace = () => {
+  const addEvent = () => {
     console.log("click");
     setIsAdding(true);
   };
 
   return (
     <Grid item>
-      {isAdding || workspaceStore.isCreating ? (
+      {isAdding || eventStore.isCreating ? (
         <Card className={classes.card}>
           <div>
             <Box my={2}>
@@ -72,9 +72,9 @@ const AddWorkspaceCard = function(props) {
                   required
                   fullWidth
                   id="name"
-                  label="Workspace Name"
+                  label="Event Name"
                   name="name"
-                  value={workspaceName}
+                  value={eventName}
                   onChange={e => setWorskspaceName(e.target.value)}
                   autoFocus
                 />
@@ -95,7 +95,7 @@ const AddWorkspaceCard = function(props) {
               <Button
                 variant="contained"
                 color="primary"
-                disabled={workspaceName.length === 0 || workspaceStore.isCreating}
+                disabled={eventName.length === 0 || eventStore.isCreating}
                 onClick={handleCreate}
                 className={classes.button}
               >
@@ -108,10 +108,10 @@ const AddWorkspaceCard = function(props) {
         <Card
           className={classes.card + " " + classes.hoverable}
           onClick={() => {
-            addWorkspace();
+            addEvent();
           }}
         >
-          <CardMedia title="Add a workspace">
+          <CardMedia title="Add a event">
             <Add fontSize="large" color="action" />
           </CardMedia>
         </Card>
@@ -120,4 +120,4 @@ const AddWorkspaceCard = function(props) {
   );
 };
 
-export default AddWorkspaceCard;
+export default AddEventCard;

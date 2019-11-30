@@ -3,11 +3,11 @@ import "./App.css";
 import Home from "./components/Home";
 import Signin from "./components/user/Signin";
 import Signup from "./components/user/Signup";
-import Workspaces from './components/workspace/Workspaces'
+import Events from './components/event/Events'
 import { createMuiTheme } from "@material-ui/core/styles";
 import deepPurple from "@material-ui/core/colors/deepPurple";
 import { ThemeProvider } from "@material-ui/core/styles";
-import Workspace from "./components/workspace/Workspace";
+import Event from "./components/event/Event";
 import rootStore from "./repositories/mobx/RootStore";
 import { observer } from 'mobx-react';
 
@@ -21,7 +21,7 @@ const theme = createMuiTheme({
 });
 
 const userStore = rootStore.userStore;
-const workspaceStore = rootStore.workspaceStore;
+const eventStore = rootStore.eventStore;
 
 const PrivateRoute = observer(({ children, ...rest }) => {
   const render = ({location}) => {
@@ -59,8 +59,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
-          <PrivateRoute path="/workspaces">
-            <Workspaces userStore={userStore} workspaceStore={workspaceStore}/>
+          <PrivateRoute path="/events">
+            <Events userStore={userStore} eventStore={eventStore}/>
           </PrivateRoute>
           <Route path="/signin">
             <Signin userStore={userStore} />
@@ -68,8 +68,8 @@ function App() {
           <Route path="/signup">
             <Signup userStore={userStore} />
           </Route>
-          <PrivateRoute path="/workspace">
-            <Workspace />
+          <PrivateRoute path="/event">
+            <Event />
           </PrivateRoute>
           <Route path="/">
             <Home userStore={userStore}/>

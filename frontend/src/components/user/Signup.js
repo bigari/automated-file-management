@@ -24,7 +24,7 @@ const Signup = observer(props => {
   const [username, setUsername] = useState("");
 
   if (userStore.isLoggedIn) {
-    return <Redirect to="/workspaces" />;
+    return <Redirect to="/events" />;
   }
 
   return (

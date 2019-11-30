@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import WorkspaceCard from './WorkspaceCard.js';
-import AddWorkspaceCard from './AddWorkspaceCard.js';
+import EventCard from './EventCard.js';
+import AddEventCard from './AddEventCard.js';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -19,17 +19,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const WorkspaceList = observer(props => {
+const EventList = observer(props => {
     const classes = useStyles();
-    const workspaces = props.workspaces;
-    const workspaceStore = props.workspaceStore;
+    const events = props.events;
+    const eventStore = props.eventStore;
     
     return (
         <Grid container className={classes.root} spacing={2}>
-            <AddWorkspaceCard workspaceStore={workspaceStore} />
-            {workspaces.map(workspace => (
-                <Grid item key={workspace.id}>
-                    <WorkspaceCard workspace={workspace} />
+            <AddEventCard eventStore={eventStore} />
+            {events.map(event => (
+                <Grid item key={event.id}>
+                    <EventCard event={event} />
                 </Grid>
             ))}
         </Grid>
@@ -37,4 +37,4 @@ const WorkspaceList = observer(props => {
     
 });
 
-export default WorkspaceList;
+export default EventList;

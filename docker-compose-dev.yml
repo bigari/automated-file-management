@@ -1,6 +1,10 @@
 version: '3'
 
 services:
+  redis:
+    image: redis:5.0.7
+    expose:
+      - 6379
   db:
     image: postgres:12.0-alpine
     restart: always
@@ -23,6 +27,7 @@ services:
       - 5002:5002
     depends_on:
       - db 
+      - redis
 
   webapp:
     env_file:

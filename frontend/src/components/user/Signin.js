@@ -20,7 +20,7 @@ const Signin = observer(props => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   if (userStore.isLoggedIn) {
-    return <Redirect to='/workspaces'/>
+    return <Redirect to='/events'/>
   }
 
   return (

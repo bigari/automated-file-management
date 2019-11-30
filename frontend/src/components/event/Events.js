@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import WorkspaceList from "./WorkspaceList";
+import EventList from "./EventList";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
@@ -14,19 +14,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Workspaces = observer(props => {
+const Events = observer(props => {
   const userStore = props.userStore;
-  const workspaceStore = props.workspaceStore;
+  const eventStore = props.eventStore;
 
   useEffect(() => {
-    async function fetchWorkspaces() {
-      await workspaceStore.fetchAll();
-      // console.log(workspaceStore.list);
+    async function fetchEvents() {
+      await eventStore.fetchAll();
+      // console.log(eventStore.list);
     }
-    fetchWorkspaces();
-  }, [workspaceStore]);
+    fetchEvents();
+  }, [eventStore]);
 
-  const workspaces = workspaceStore.list;
+  const events = eventStore.list;
   const classes = useStyles();
 
   return (
@@ -35,13 +35,13 @@ const Workspaces = observer(props => {
       <Container className="container">
         <Grid container>
           <Typography variant="h6" className={classes.header}>
-            Workspaces
+            Events
           </Typography>
-          <WorkspaceList workspaces={workspaces} workspaceStore={workspaceStore}/>
+          <EventList events={events} eventStore={eventStore}/>
         </Grid>
       </Container>
     </div>
   );
 });
 
-export default Workspaces;
+export default Events;
