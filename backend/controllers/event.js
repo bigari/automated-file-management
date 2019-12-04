@@ -22,11 +22,15 @@ module.exports = {
 
   create: async function(req, res) {
     const name = req.body.name;
+    const startAt =  new Date(req.body.startAt);
+    const endAt = new Date(req.body.endAt);
     try {
       // persist in database
       const event = await Event.create({
         name: name,
-        ownerId: req.user.id
+        ownerId: req.user.id,
+        startAt: startAt,
+        endAt: endAt
       });
       res
         .status(200)
