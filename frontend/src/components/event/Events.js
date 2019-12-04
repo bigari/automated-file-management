@@ -7,6 +7,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import NavBar from "../NavBar";
 import { observer } from "mobx-react";
 
+import { Switch, Route, useRouteMatch } from "react-router-dom";
+import Event from "./Event";
+
+
 const useStyles = makeStyles(theme => ({
   container: {
     marginTop: "20px",
@@ -28,19 +32,27 @@ const Events = observer(props => {
 
   const events = eventStore.list;
   const classes = useStyles();
+  const { path } = useRouteMatch();
 
   return (
-    <div>
-      <NavBar userStore={userStore} />
-      <Container className="container">
-        <Grid container>
-          <Typography variant="h6" className={classes.header}>
-            Events
-          </Typography>
-          <EventList events={events} eventStore={eventStore}/>
-        </Grid>
-      </Container>
-    </div>
+    <Switch>
+      <Route exact path={path}>
+        <div>
+          <NavBar userStore={userStore} />
+          <Container className="container">
+            <Grid container>
+              <Typography variant="h6" className={classes.header}>
+                Events
+              </Typography>
+              <EventList events={events} eventStore={eventStore} />
+            </Grid>
+          </Container>
+        </div>
+      </Route>
+      <Route path={`${path}/:eventId`}>
+          <Event eventStore={eventStore}/>
+      </Route>
+    </Switch>
   );
 });
 

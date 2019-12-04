@@ -7,7 +7,6 @@ import Events from "./components/event/Events";
 import { createMuiTheme } from "@material-ui/core/styles";
 import deepPurple from "@material-ui/core/colors/deepPurple";
 import { ThemeProvider } from "@material-ui/core/styles";
-import Event from "./components/event/Event";
 import rootStore from "./repositories/mobx/RootStore";
 import { observer } from "mobx-react";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -67,9 +66,6 @@ function App() {
             <Route path="/signup">
               <Signup userStore={userStore} />
             </Route>
-            <PrivateRoute path="/event">
-              <Event />
-            </PrivateRoute>
             <Route path="/">
               <Home userStore={userStore} />
             </Route>

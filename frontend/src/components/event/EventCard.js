@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Box } from "@material-ui/core";
 import Calendar from "@material-ui/icons/CalendarToday";
+import { useHistory } from "react-router-dom";
 
 const isActive = event => {
   const now = new Date();
@@ -49,14 +50,16 @@ const useStyles = makeStyles({
 const EventCard = function(props) {
   const classes = useStyles();
   const event = props.event;
-
+  const history = useHistory();
   return (
     <Box display="flex">
       <Box
         width={8}
         className={isActive(event) ? classes.active : classes.past}
       />
-      <Card className={classes.card}>
+      <Card className={classes.card} onClick={() => {
+        history.push(`/events/${event.id}`)
+      }}>
         <CardContent>
           <Box height={100} display="flex" alignItems="center">
             <Box mt={2}>
