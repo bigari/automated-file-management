@@ -4,7 +4,12 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Box } from "@material-ui/core";
-import roleIcon from "../../icons/role512.png";
+import Calendar from "@material-ui/icons/CalendarToday";
+
+const isActive = event => {
+  const now = new Date();
+  return new Date(event.endAt) >= now;
+};
 
 const useStyles = makeStyles({
   card: {
@@ -28,6 +33,16 @@ const useStyles = makeStyles({
   date: {
     "text-transform": "capitalize",
     "font-style": "italic"
+  },
+
+  active: {
+    "background-color": "purple",
+    "border-radius": "10px 0px 0px 10px"
+  },
+
+  past: {
+    "background-color": "grey",
+    "border-radius": "10px 0px 0px 10px"
   }
 });
 
@@ -36,23 +51,38 @@ const EventCard = function(props) {
   const event = props.event;
 
   return (
-    <Card className={classes.card}>
-      <CardContent>
-        <Box height={150} display="flex" alignItems="center">
-          <Box mt={2}>
-            <Typography variant="subtitle1">{event.name}</Typography>
+    <Box display="flex">
+      <Box
+        width={8}
+        className={isActive(event) ? classes.active : classes.past}
+      />
+      <Card className={classes.card}>
+        <CardContent>
+          <Box height={100} display="flex" alignItems="center">
+            <Box mt={2}>
+              <Typography variant="subtitle1">{event.name}</Typography>
+            </Box>
           </Box>
-        </Box>
-        <Box height={50} display="flex">
-          <Box mr={4}>
-            <img src={roleIcon} alt="role" width={24} height={24} />
+          <Box display="flex" alignItems="center">
+            <Box mr={2}>
+              <Calendar />
+            </Box>
+            <Box>
+              <Box>
+                <Typography variant="caption" className={classes.date}>
+                  {new Date(event.startAt).toLocaleString()}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" className={classes.date}>
+                  {new Date(event.endAt).toLocaleString()}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
-          <Typography variant="caption" className={classes.date}>
-            {event.startAt}
-          </Typography>
-        </Box>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Box>
   );
 };
 

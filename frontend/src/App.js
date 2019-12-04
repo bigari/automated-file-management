@@ -3,16 +3,22 @@ import "./App.css";
 import Home from "./components/Home";
 import Signin from "./components/user/Signin";
 import Signup from "./components/user/Signup";
-import Events from './components/event/Events'
+import Events from "./components/event/Events";
 import { createMuiTheme } from "@material-ui/core/styles";
 import deepPurple from "@material-ui/core/colors/deepPurple";
 import { ThemeProvider } from "@material-ui/core/styles";
 import Event from "./components/event/Event";
 import rootStore from "./repositories/mobx/RootStore";
-import { observer } from 'mobx-react';
+import { observer } from "mobx-react";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
-
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 
 const theme = createMuiTheme({
   palette: {
@@ -24,12 +30,10 @@ const userStore = rootStore.userStore;
 const eventStore = rootStore.eventStore;
 
 const PrivateRoute = observer(({ children, ...rest }) => {
-  const render = ({location}) => {
-    if (userStore.isLoggedIn){
-      return (children)
-    }
-
-    else{ 
+  const render = ({ location }) => {
+    if (userStore.isLoggedIn) {
+      return children;
+    } else {
       return (
         <Redirect
           to={{
@@ -37,46 +41,42 @@ const PrivateRoute = observer(({ children, ...rest }) => {
             state: { referrer: location }
           }}
         />
-      )
+      );
     }
-  }
+  };
 
   if (userStore.isPending) {
-    return (<div>Loading...</div>)
+    return <div>Loading...</div>;
+  } else {
+    return <Route {...rest} render={render} />;
   }
-  else{
-    return (
-      <Route
-        {...rest}
-        render={render}
-      />
-    );
-  }
-})
+});
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Switch>
-          <PrivateRoute path="/events">
-            <Events userStore={userStore} eventStore={eventStore}/>
-          </PrivateRoute>
-          <Route path="/signin">
-            <Signin userStore={userStore} />
-          </Route>
-          <Route path="/signup">
-            <Signup userStore={userStore} />
-          </Route>
-          <PrivateRoute path="/event">
-            <Event />
-          </PrivateRoute>
-          <Route path="/">
-            <Home userStore={userStore}/>
-          </Route>
-        </Switch>
-      </Router>
-    </ThemeProvider>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Switch>
+            <PrivateRoute path="/events">
+              <Events userStore={userStore} eventStore={eventStore} />
+            </PrivateRoute>
+            <Route path="/signin">
+              <Signin userStore={userStore} />
+            </Route>
+            <Route path="/signup">
+              <Signup userStore={userStore} />
+            </Route>
+            <PrivateRoute path="/event">
+              <Event />
+            </PrivateRoute>
+            <Route path="/">
+              <Home userStore={userStore} />
+            </Route>
+          </Switch>
+        </Router>
+      </ThemeProvider>
+    </MuiPickersUtilsProvider>
   );
 }
 

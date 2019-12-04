@@ -29,18 +29,19 @@ export class EventStore {
         return 1;
       } else if (d1 === d2) {
         return 0;
-      } else if (d1 > d2) {
-        return -1;
       }
+      return -1;
     });
   }
 
-  create(name) {
+  create(eventData) {
     this.isLoading.create = true;
     return client.api
       .url("/events")
       .post({
-        name: name
+        name: eventData.name,
+        startAt: eventData.startAt,
+        endAt: eventData.endAt
       })
       .json(json => {
         runInAction(() => {

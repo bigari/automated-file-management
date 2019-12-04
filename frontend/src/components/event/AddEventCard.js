@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
-import CardMedia from "@material-ui/core/CardMedia";
+import {
+  Card,
+  CardActions,
+  Grid,
+  TextField,
+  Button,
+  CardMedia,
+  Typography,
+  Box
+} from "@material-ui/core";
 import Add from "@material-ui/icons/Add";
+import { KeyboardTimePicker, KeyboardDatePicker } from "@material-ui/pickers";
 
 const useStyles = makeStyles(theme => ({
   hoverable: {
@@ -16,8 +21,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   card: {
-    minWidth: "100px",
-    width: "250px",
+    width: "258px",
     height: "200px",
     "padding-top": "20px",
     "padding-right": "20px",
@@ -32,6 +36,14 @@ const useStyles = makeStyles(theme => ({
     "font-size": "20px",
     "line-height": "5px"
   },
+  largeCard: {
+    "padding-top": "48px",
+    "padding-right": "48px",
+    "padding-bottom": "12px",
+    "padding-left": "48px",
+    "min-width": "400px",
+    width: "80%"
+  },
   media: {
     height: "50px",
     width: "50px"
@@ -42,80 +54,126 @@ const AddEventCard = function(props) {
   const classes = useStyles();
   const eventStore = props.eventStore;
   const [isAdding, setIsAdding] = useState(false);
-  const [eventName, setWorskspaceName] = useState("");
+  const [eventName, setEventName] = useState("");
+  const [eventStartAt, setEventStartAt] = React.useState(new Date());
+  const tomorrow = new Date();
+  tomorrow.setHours(tomorrow.getHours() + 2);
+  const [eventEndAt, setEventEndAt] = React.useState(tomorrow);
 
   const handleCancel = () => {
     setIsAdding(false);
   };
 
   const handleCreate = () => {
-    setWorskspaceName("");
-    eventStore.create(eventName);
+    const eventData = {
+      name: eventName,
+      startAt: eventStartAt.toISOString(),
+      endAt: eventEndAt.toISOString()
+    };
+    // console.log(eventData)
+    eventStore.create(eventData);
+    setEventName("");
     setIsAdding(false);
   };
 
   const addEvent = () => {
-    console.log("click");
     setIsAdding(true);
   };
 
   return (
-    <Grid item>
-      {isAdding || eventStore.isCreating ? (
-        <Card className={classes.card}>
-          <div>
-            <Box my={2}>
-              <form>
-                <TextField
-                  variant="outlined"
+    <Grid item xs={isAdding ? 12 : 3}>
+      <Box display="flex" display="flex" justifyContent="center">
+        {isAdding || eventStore.isCreating ? (
+          <Box justify="center">
+            <Card className={classes.largeCard}>
+              <Box pb={2}>
+                <Typography variant="subtitle1">Create an Event</Typography>
+              </Box>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="Event Name"
+                name="name"
+                value={eventName}
+                onChange={e => setEventName(e.target.value)}
+                autoFocus
+              />
+              <Box display="flex" pt={2}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="MM/dd/yyyy"
                   margin="normal"
-                  required
-                  fullWidth
-                  id="name"
-                  label="Event Name"
-                  name="name"
-                  value={eventName}
-                  onChange={e => setWorskspaceName(e.target.value)}
-                  autoFocus
+                  label="Start Date"
+                  value={eventStartAt}
+                  onChange={date => setEventStartAt(date)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date"
+                  }}
                 />
-              </form>
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              flexWrap="wrap"
-            >
-              <Box mr="auto">
-                <Button variant="outlined" onClick={handleCancel}>
-                  Cancel
-                </Button>
+
+                <KeyboardTimePicker
+                  margin="normal"
+                  label="Start Time"
+                  value={eventStartAt}
+                  onChange={date => setEventStartAt(date)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change time"
+                  }}
+                />
+              </Box>
+              <Box display="flex" pt={2} pb={4}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  margin="normal"
+                  label="End Date"
+                  value={eventEndAt}
+                  onChange={date => setEventEndAt(date)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change date"
+                  }}
+                />
+
+                <KeyboardTimePicker
+                  margin="normal"
+                  label="End Time"
+                  value={eventEndAt}
+                  onChange={date => setEventEndAt(date)}
+                  KeyboardButtonProps={{
+                    "aria-label": "change time"
+                  }}
+                />
               </Box>
 
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={eventName.length === 0 || eventStore.isCreating}
-                onClick={handleCreate}
-                className={classes.button}
-              >
-                Create
-              </Button>
-            </Box>
-          </div>
-        </Card>
-      ) : (
-        <Card
-          className={classes.card + " " + classes.hoverable}
-          onClick={() => {
-            addEvent();
-          }}
-        >
-          <CardMedia title="Add a event">
-            <Add fontSize="large" color="action" />
-          </CardMedia>
-        </Card>
-      )}
+              <CardActions>
+                <Button onClick={handleCancel} color="primary">
+                  Cancel
+                </Button>
+
+                <Button onClick={handleCreate} color="primary">
+                  Create
+                </Button>
+              </CardActions>
+            </Card>
+          </Box>
+        ) : (
+          <Card
+            className={classes.card + " " + classes.hoverable}
+            onClick={() => {
+              addEvent();
+            }}
+          >
+            <CardMedia title="Add a event">
+              <Add fontSize="large" color="action" />
+            </CardMedia>
+          </Card>
+        )}
+      </Box>
     </Grid>
   );
 };
