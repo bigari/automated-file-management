@@ -58,7 +58,7 @@ const EventCard = function(props) {
         className={isActive(event) ? classes.active : classes.past}
       />
       <Card className={classes.card} onClick={() => {
-        history.push(`/events/${event.id}`)
+        history.push(`/events/${event.id}/polls`)
       }}>
         <CardContent>
           <Box height={100} display="flex" alignItems="center">
