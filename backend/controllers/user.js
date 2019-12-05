@@ -63,21 +63,19 @@ module.exports = {
 
       const jwtToken = await this.genToken(user.id);
 
-      res.cookie("jwt", 
-        jwtToken, {
-          maxAge: jwtExpiration * 1000,
-          secure: false,
-          httpOnly: true
+      res.cookie("jwt", jwtToken, {
+        maxAge: jwtExpiration * 1000,
+        secure: false,
+        httpOnly: true
       });
 
       user.dataValues.jwt = jwtToken;
-      delete user.dataValues.password
+      delete user.dataValues.password;
 
       res
         .status(200)
         .set("Content-Type", "application/json")
-        .send({ user: user });
-
+        .send({ user: { ...user.dataValues } });
     } catch (err) {
       res
         .status(500)
@@ -149,12 +147,12 @@ module.exports = {
       });
 
       user.dataValues.jwt = jwtToken;
-      delete user.dataValues.password
+      delete user.dataValues.password;
 
       res
         .status(200)
         .set("Content-Type", "application/json")
-        .send({ user: user });
+        .send({ user: { ...user.dataValues } });
     } catch (error) {
       console.error(error);
       res.end();
@@ -162,16 +160,17 @@ module.exports = {
   },
 
   logout: (req, res, next) => {
-    res.clearCookie('jwt', {
+    res.clearCookie("jwt", {
       secure: false,
       httpOnly: true
-    })
+    });
     res.end();
   },
 
   validateCookie: (req, res) => {
     const user = req.user;
-    delete user.password;
-    res.status(200).send({user: req.user});
+    delete user.dataValues.password;
+    user.dataValues.jwt = req.cookies["jwt"] 
+    res.status(200).send({ user: user });
   }
 };

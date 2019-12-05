@@ -28,6 +28,14 @@ services:
     depends_on:
       - db 
       - redis
+  realtime:
+    build: ./realtime
+    volumes:
+      - ./realtime:/usr/src/app
+    ports:
+      - 5003:8080
+    depends_on:
+      - rest-api
 
   webapp:
     env_file:

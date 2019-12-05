@@ -8,14 +8,14 @@ services:
     volumes:
       - ./backend:/usr/src/app
     ports:
-      - 5003:5002 
+      - 5002:5002 
 
   webapp:
     build: ./frontend/build
     volumes:
       - ./frontend/build:/var/www
     ports:
-      - 5004:80
+      - 5001:80
     depends_on:
       - rest-api
     
