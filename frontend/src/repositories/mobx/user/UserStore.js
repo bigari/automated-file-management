@@ -49,7 +49,6 @@ export class UserStore {
       })
       .json(json => {
         this.user = json.user;
-        console.log(this.user);
         this.signinError = null;
       });
   }
@@ -110,7 +109,6 @@ export class UserStore {
       .json(({ user }) => {
         this.pending = false;
         this.user = user;
-        console.log(user)
       })
       .catch(error => {
         this.pending = false;

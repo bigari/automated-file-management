@@ -19,5 +19,4 @@ wss.on('connection', (ws) => {
     }
 
   })
-  ws.send('ho!')
 })
