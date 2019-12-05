@@ -21,6 +21,7 @@ export class EventStore {
   get count() {
     return this.events.length;
   }
+
   get list() {
     return Object.values(this.events).sort((w1, w2) => {
       const d1 = Date.parse(w1.createdAt);

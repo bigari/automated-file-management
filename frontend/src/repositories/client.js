@@ -1,6 +1,7 @@
 import wretch from "wretch";
 
 class Client {
+  jwt;
   api =  wretch()
   .url("http://localhost:5002")
   .options({ credentials: "include", mode: "cors" });

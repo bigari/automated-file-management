@@ -10,7 +10,6 @@ import { observer } from "mobx-react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import Event from "./Event";
 
-
 const useStyles = makeStyles(theme => ({
   container: {
     marginTop: "20px",
@@ -21,6 +20,40 @@ const useStyles = makeStyles(theme => ({
 const Events = observer(props => {
   const userStore = props.userStore;
   const eventStore = props.eventStore;
+
+  let socket = new WebSocket("ws://localhost:5003");
+
+  socket.onopen = function(e) {
+    console.log("[open] Connection established");
+    console.log("Sending to server");
+    socket.send(
+      JSON.stringify({
+        url: "events",
+        jwt: eventStore.root.userStore.user.jwt,
+        verb: "GET"
+      })
+    );
+  };
+
+  socket.onmessage = function(event) {
+    console.log(`[message] Data received from server: ${event.data}`);
+  };
+
+  socket.onclose = function(event) {
+    if (event.wasClean) {
+      console.log(
+        `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+      );
+    } else {
+      // e.g. server process killed or network down
+      // event.code is usually 1006 in this case
+      console.log("[close] Connection died");
+    }
+  };
+
+  socket.onerror = function(error) {
+    console.log(`[error] ${error.message}`);
+  };
 
   useEffect(() => {
     async function fetchEvents() {
@@ -50,7 +83,7 @@ const Events = observer(props => {
         </div>
       </Route>
       <Route path={`${path}/:eventId`}>
-          <Event eventStore={eventStore}/>
+        <Event eventStore={eventStore} />
       </Route>
     </Switch>
   );
