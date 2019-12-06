@@ -67,8 +67,6 @@ const NavBar = observer((props) => {
     let navbarItems = [signinBtn, signupBtn];
 
     if(userStore.isLoggedIn) {
-      navbarItems = []
-
       navbarItems = [(
         <Button key="btn" aria-controls="menu" aria-haspopup="true" 
         onClick={handleClick} 
