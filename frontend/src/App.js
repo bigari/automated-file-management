@@ -21,7 +21,8 @@ import {
 
 const theme = createMuiTheme({
   palette: {
-    primary: deepPurple
+    primary: deepPurple,
+    
   }
 });
 

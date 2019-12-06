@@ -99,12 +99,12 @@ const NavBar = observer((props) => {
             background: "#282c34",
             boxShadow: "none",
             color: "white",
-            minHeight: "5vh"
+            height: "5vh"
           }}
         >
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
-              File Flow
+              Interconf
             </Typography>
 
             {navbarItems}

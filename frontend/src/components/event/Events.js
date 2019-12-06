@@ -24,7 +24,6 @@ const Events = observer(props => {
   webSocketService.init();
   webSocketService.send({
     url: "events",
-    jwt: eventStore.root.userStore.user.jwt,
     verb: "GET"
   });
   useEffect(() => {

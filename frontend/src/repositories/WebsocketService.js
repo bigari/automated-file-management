@@ -13,14 +13,15 @@ export default class WebsocketService {
     this.socket = new WebSocket("ws://localhost:5003");
     this.socket.onopen = event => {
       this.isOpen = true;
-      while (this.queue.length > 0) {
-        this.send(this.queue.shift());
-      }
+      this.sendQueue();
       console.log("[open] Connection established");
     };
     this.socket.onmessage = event => {
       //console.log(`[message] Data received from server: ${event.data}`);
-      this.routeToStore(JSON.parse(event.data));
+      const messageQueue = JSON.parse(event.data);
+      for (const message of messageQueue) {
+        this.routeToStore(message);
+      }
     };
     this.socket.onerror = error => {
       console.log(`[error] ${error.message}`);
@@ -39,12 +40,30 @@ export default class WebsocketService {
     };
   }
 
-  send(message) {
+  sendQueue() {
     if (this.isOpen) {
-      this.socket.send(JSON.stringify(message));
-    } else {
-      this.queue.push(message);
+      this.socket.send(
+        JSON.stringify({
+          jwt: this.root.userStore.user.jwt,
+          queue: this.queue
+        })
+      );
+      this.queue.length = 0;
     }
+  }
+
+  /** Enqueue a message and send the queue
+   * @typedef {Object} Message
+   * @property {String} verb - http verb
+   * @property {String} url
+   * @property {Object} data
+   *
+   * @param {Message} message
+   *
+   */
+  send(message) {
+    this.queue.push(message);
+    this.sendQueue();
   }
 
   close() {
@@ -74,15 +93,10 @@ export default class WebsocketService {
         PUT: () => {}
       }
     };
-    switch (resources.length) {
-      case 1:
-        ROUTES[resources[0]][message.verb]();
-        break;
-      case 3:
-        ROUTES[resources[0]]["id"][resources[2]][message.verb]();
-        break;
-      default:
-        break;
+    if (resources.length <= 2) {
+      ROUTES[resources[0]][message.verb]();
+    } else if (resources.length <= 4) {
+      ROUTES[resources[0]]["id"][resources[2]][message.verb]();
     }
   }
 }
