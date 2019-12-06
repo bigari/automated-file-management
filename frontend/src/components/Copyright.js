@@ -8,7 +8,7 @@ const Copyright = (props) => {
       <Typography variant="body2" align="center" className={dark?"bg-dark":"no-class"}>
         {'Copyright © '}
         <Link color="inherit" href="/">
-          FileFlow
+          Interconf
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}
