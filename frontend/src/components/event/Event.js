@@ -13,6 +13,7 @@ import {
 } from "@material-ui/icons";
 import SideNav, { NavItem, NavIcon, NavText } from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
+import QAs from "./qas/QAs"
 
 const Event = observer(props => {
   const { eventId } = useParams();
@@ -67,7 +68,7 @@ const Event = observer(props => {
           <main style={{paddingLeft: 82, paddingTop: 24}}>
             <Route
               path={`/events/${eventId}/qa`}
-              component={props => <div>Question Answer</div>}
+              component={QAs}
             />
             <Route
               path={`/events/${eventId}/polls`}

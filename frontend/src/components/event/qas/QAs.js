@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
+import { Box, Container, Paper } from "@material-ui/core";
 import Question from "./Question";
 
 const useStyles = makeStyles(theme => ({
@@ -39,10 +39,15 @@ export default function IconButtons() {
 
   const questions = [question, question];
   return (
-    <Box>
-      {questions.map(question => {
-        return <Question question={question} />;
-      })}
-    </Box>
+    <Container maxWidth="md">
+      <Paper>
+        <Box>
+          {questions.map(question => {
+            return <Question question={question} />;
+          })}
+        </Box>
+      </Paper>
+    </Container>
+    
   );
 }
