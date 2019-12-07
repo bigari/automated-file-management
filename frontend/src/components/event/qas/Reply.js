@@ -15,4 +15,4 @@ const Reply = function(props) {
   );
 };
 
-module.exports = Reply;
+export default Reply;

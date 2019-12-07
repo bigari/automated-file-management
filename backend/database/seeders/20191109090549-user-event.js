@@ -36,6 +36,12 @@ module.exports = {
           email: "bigari7+afm3@gmail.com",
           password: bcrypt.hashSync("000000", salt),
           createdAt: new Date()
+        },
+        {
+          username: "yerima",
+          email: "test@gmail.com",
+          password: bcrypt.hashSync("test", salt),
+          createdAt: new Date()
         }
       ],
       {}
@@ -56,17 +62,13 @@ module.exports = {
           name: "The future of AI",
           ownerId: users[0].id,
           startAt: now,
-          endAt: new Date(new Date().setMonth(now.getMonth() + 1)),
-          createdAt: now,
-          updatedAt: now
+          endAt: new Date(new Date().setMonth(now.getMonth() + 1))
         },
         {
           name: "Robotic & design",
           ownerId: users[1].id,
           startAt: new Date(new Date().setMonth(now.getMonth() - 1)),
-          endAt: now,
-          createdAt: now,
-          updatedAt: now
+          endAt: now
         }
       ],
       {}

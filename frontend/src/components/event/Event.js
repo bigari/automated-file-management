@@ -17,22 +17,24 @@ import QAs from "./qas/QAs"
 
 const Event = observer(props => {
   const { eventId } = useParams();
-  const eventStore = props.eventStore;
+  const rootStore = props.rootStore;
+  const eventStore = rootStore.eventStore;
   const event = eventStore.events[eventId];
+
   console.log(event);
   return (
     <Route
-      render={({ location, history }) => (
+      render={(props) => (
         <React.Fragment>
           <SideNav
             onSelect={selected => {
               if (selected === "back") {
-                history.replace("/events");
+                props.history.replace("/events");
                 return;
               }
               const to = `/events/${eventId}/` + selected;
-              if (location.pathname !== to) {
-                history.push(to);
+              if (props.location.pathname !== to) {
+                props.history.push(to);
               }
             }}
 
@@ -67,12 +69,12 @@ const Event = observer(props => {
           </SideNav>
           <main style={{paddingLeft: 82, paddingTop: 24}}>
             <Route
-              path={`/events/${eventId}/qa`}
-              component={QAs}
+              path={`/events/${eventId}/questions`}
+              component={(props) => <div>Events</div>}
             />
             <Route
               path={`/events/${eventId}/polls`}
-              component={props => <div>Polls</div>}
+              component={(props) => <div>Polls</div>}
             />
             <Route
               path={`/events/${eventId}/members`}

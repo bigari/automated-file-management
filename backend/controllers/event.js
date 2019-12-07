@@ -1,4 +1,4 @@
-const { Event, Member } = require("../database/models/index");
+const { Event } = require("../database/models/index");
 
 module.exports = {
   //List all events current user is part of
@@ -9,11 +9,11 @@ module.exports = {
           ownerId: req.user.id
         }
       });
-
       res
         .status(200)
         .set("Content-Type", "application/json")
         .send({ events: events });
+
     } catch (error) {
       console.log(error);
       res.end();
@@ -36,6 +36,7 @@ module.exports = {
         .status(200)
         .set("Content-Type", "application/json")
         .send({ event: event });
+
     } catch (error) {
       console.error(error);
       res.end();

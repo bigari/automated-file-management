@@ -2,6 +2,8 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, Container, Paper } from "@material-ui/core";
 import Question from "./Question";
+import { observer } from "mobx-react";
+
 
 const useStyles = makeStyles(theme => ({
   buttons: {
@@ -12,42 +14,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function IconButtons() {
+export default observer(function(props) {
   const classes = useStyles();
-  const question = {
-    user: "Rahal",
-    timestamp: "2019-12-05T16:42:57.539Z",
-    content: "This is content",
-    replies: [
-      {
-        username: "Anonymous",
-        content: "This is a reply",
-        timestamp: "2019-12-05T16:42:57.539Z"
-      },
-      {
-        username: "Anonymous",
-        timestamp: "2019-12-05T16:42:57.539Z",
-        content: "This is a second reply"
-      },
-      {
-        username: "Anonymous",
-        timestamp: "2019-12-05T16:42:57.539Z",
-        content: "This is a second reply"
-      }
-    ]
-  };
+  const eid = props.match.params.eid; 
+  const store = props.rootStore.questionStore;
 
-  const questions = [question, question];
+
+  store.fetchQuestions(eid)
+
   return (
     <Container maxWidth="md">
       <Paper>
         <Box>
-          {questions.map(question => {
-            return <Question question={question} />;
-          })}
+          {/* {
+            store.questions.map(question => {
+              return <Question question={question} />;
+            })
+          } */}
         </Box>
       </Paper>
     </Container>
     
   );
-}
+});

@@ -5,11 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     endAt: DataTypes.DATE,
     name: DataTypes.STRING,
     ownerId: DataTypes.INTEGER
-  }, {});
+  }, {timestamps: false});
   Event.associate = function(models) {
     // associations can be defined here
-    Event.hasMany(models.Question, { as: "questions" });
-    Event.belongsTo(models.User, { foreignKey: "ownerId" });
+    Event.hasMany(models.Question, { foreignKey: "eid", as: "questions" });
+    Event.belongsTo(models.User, { foreignKey: "ownerId", as: "owner" });
   };
   return Event;
 };

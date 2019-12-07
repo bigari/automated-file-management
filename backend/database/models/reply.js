@@ -4,10 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.STRING,
     timestamp: DataTypes.DATE,
     qid: DataTypes.INTEGER
-  }, {});
+  }, {timestamps: false});
   Reply.associate = function(models) {
     // associations can be defined here
-    Reply.belongsTo(models.Question, { foreignKey: "qid" })
+    Reply.belongsTo(models.Question, { foreignKey: "qid", as: "question" })
   };
   return Reply;
 };

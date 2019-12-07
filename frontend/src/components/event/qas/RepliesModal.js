@@ -73,4 +73,4 @@ const RepliesModal = function(props) {
   );
 };
 
-module.exports = RepliesModal;
+export default RepliesModal;
