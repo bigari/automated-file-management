@@ -69,8 +69,8 @@ const Event = observer(props => {
           </SideNav>
           <main style={{paddingLeft: 82, paddingTop: 24}}>
             <Route
-              path={`/events/${eventId}/questions`}
-              component={(props) => <div>Events</div>}
+              path={`/events/${eventId}/qa`}
+              component={(props) => <QAs eid={eventId} rootStore={rootStore}/>}
             />
             <Route
               path={`/events/${eventId}/polls`}
