@@ -59,7 +59,7 @@ function App() {
         <Router>
           <Switch>
             <PrivateRoute path="/events">
-              <Events userStore={userStore} eventStore={eventStore} />
+              <Events rootStore={rootStore} />
             </PrivateRoute>
             <Route path="/signin">
               <Signin userStore={userStore} />

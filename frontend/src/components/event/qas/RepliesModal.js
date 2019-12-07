@@ -6,7 +6,7 @@ import Question from "./Question";
 import Reply from "./Reply";
 import grey from '@material-ui/core/colors/grey';
 
-const primary = grey[500];
+const borderColor = grey[300];
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -18,8 +18,13 @@ const useStyles = makeStyles(theme => ({
     left: "50%",
     transform: "translate(-50%, -50%)"
   },
-  test: {
+  icon: {
     "margin-left": "10px"
+  },
+  header: {
+    "margin-bottom": "1px",
+    padding: "10px",
+    "border-bottom": "1px solid #e0e0e0"
   }
 }));
 
@@ -29,14 +34,9 @@ const RepliesModal = function(props) {
 
   return (
     <Box class={classes.modal}>
-      <Box 
-        borderBottom={0.1} 
-        borderColor={primary}
-        mb={2} 
-        p={2}
-      >
+      <div class={classes.header}>
         Replies
-      </Box>
+      </div>
 
       <Box style={{maxHeight: 400, overflow: 'auto'}}>
         <Question question={question} footer={false}/>
@@ -49,7 +49,7 @@ const RepliesModal = function(props) {
 
       <Box
         borderTop={0.1}
-        borderColor={primary}
+        borderColor={borderColor}
         px={2}
         pb={2}
         display="flex"
@@ -65,7 +65,7 @@ const RepliesModal = function(props) {
           multiline
           margin="normal"
         />
-        <IconButton size="small" classes={{ root: classes.test }}>
+        <IconButton size="small" classes={{ root: classes.icon }}>
           <SendIcon />
         </IconButton>
       </Box>
@@ -73,4 +73,4 @@ const RepliesModal = function(props) {
   );
 };
 
-module.exports = RepliesModal;
+export default RepliesModal;

@@ -3,7 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Box, IconButton, Menu, MenuItem, Modal } from "@material-ui/core";
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import RepliesModal from "./RepliesModal";
+import grey from '@material-ui/core/colors/grey';
 
+const borderColor = grey[300]
 const useStyles = makeStyles(theme => ({
   buttons: {
     border: "none",
@@ -53,7 +55,7 @@ export default function Question(props) {
 
 
   return (
-    <Box p={2}>
+    <Box p={2} borderTop={1} borderColor={borderColor}>
       <Box pb={1}>{question.user}</Box>
       <Box pb={2}>{question.timestamp}</Box>
       <Box pb={2}>{question.content}</Box>

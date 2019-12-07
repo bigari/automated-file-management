@@ -6,6 +6,7 @@ const eventController = require("./controllers/event");
 const { check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const passport = require("./passport");
+const questionController = require("./controllers/question");
 
 const app = express();
 
@@ -60,7 +61,11 @@ app.get(
 app.get('/validateCookie', 
   passport.authenticate("jwt", {session: false}),
   userController.validateCookie
-)
+);
 
+app.get("/event/:eid/questions",
+  // passport.authenticate("jwt", {session: false}),
+  questionController.fetchQuestions.bind(questionController)
+);
 
 module.exports = app;
