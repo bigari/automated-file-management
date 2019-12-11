@@ -1,19 +1,18 @@
 import React from "react";
 import { observer } from "mobx-react";
-import {
-  useParams,
-  Route
-} from "react-router-dom";
+import { useParams, Route } from "react-router-dom";
 
 import {
   BarChartRounded,
   QuestionAnswerRounded,
   GroupRounded,
-  ArrowBackIosRounded
+  ArrowBackIosRounded,
+  InfoRounded
 } from "@material-ui/icons";
 import SideNav, { NavItem, NavIcon, NavText } from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
-import QAs from "./qas/QAs"
+import QAs from "./qas/QAs";
+import Info from "./info/Info"
 
 const Event = observer(props => {
   const { eventId } = useParams();
@@ -24,7 +23,7 @@ const Event = observer(props => {
   console.log(event);
   return (
     <Route
-      render={(props) => (
+      render={props => (
         <React.Fragment>
           <SideNav
             onSelect={selected => {
@@ -37,11 +36,16 @@ const Event = observer(props => {
                 props.history.push(to);
               }
             }}
-
-            style={{backgroundColor: "#320b86"}}
+            style={{ backgroundColor: "#320b86" }}
           >
             <SideNav.Toggle />
-            <SideNav.Nav defaultSelected="polls">
+            <SideNav.Nav defaultSelected="info">
+              <NavItem eventKey="info">
+                <NavIcon>
+                  <InfoRounded style={{ fontSize: "2em" }} />
+                </NavIcon>
+                <NavText>Info</NavText>
+              </NavItem>
               <NavItem eventKey="polls">
                 <NavIcon>
                   <BarChartRounded style={{ fontSize: "2em" }} />
@@ -67,14 +71,18 @@ const Event = observer(props => {
               </NavItem>
             </SideNav.Nav>
           </SideNav>
-          <main style={{paddingLeft: 82, paddingTop: 24}}>
+          <main style={{ paddingLeft: 82, paddingTop: 24 }}>
+            <Route
+              path={`/events/${eventId}/info`}
+              component={props => <Info eid={eventId} rootStore={rootStore} />}
+            />
             <Route
               path={`/events/${eventId}/qa`}
-              component={(props) => <QAs eid={eventId} rootStore={rootStore}/>}
+              component={props => <QAs eid={eventId} rootStore={rootStore} />}
             />
             <Route
               path={`/events/${eventId}/polls`}
-              component={(props) => <div>Polls</div>}
+              component={props => <div>Polls</div>}
             />
             <Route
               path={`/events/${eventId}/members`}

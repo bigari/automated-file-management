@@ -22,12 +22,13 @@ const Events = observer(props => {
   const eventStore = rootStore.eventStore;
   const userStore = rootStore.userStore;
 
-  const webSocketService = eventStore.root.webSocketService;
-  webSocketService.init();
-  webSocketService.send({
-    url: "events",
-    verb: "GET"
-  });
+  // const webSocketService = eventStore.root.webSocketService;
+  // webSocketService.init();
+  // webSocketService.send({
+  //   url: "events",
+  //   verb: "GET"
+  // });
+  
   useEffect(() => {
     async function fetchEvents() {
       await eventStore.fetchAll();
