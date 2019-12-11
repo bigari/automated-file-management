@@ -61,12 +61,14 @@ module.exports = {
         {
           name: "The future of AI",
           ownerId: users[0].id,
+          accessCode: "00001G",
           startAt: now,
           endAt: new Date(new Date().setMonth(now.getMonth() + 1))
         },
         {
           name: "Robotic & design",
           ownerId: users[1].id,
+          accessCode: "00007Q",
           startAt: new Date(new Date().setMonth(now.getMonth() - 1)),
           endAt: now
         }
