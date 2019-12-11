@@ -1,4 +1,4 @@
-const { Event } = require("../database/models/index");
+const { Event, Sequelize } = require("../database/models/index");
 
 const BLOCK_SIZE = 100;
 const MAX_CODE_NUM = parseInt("ZZZZZZ", 36) + 1;
@@ -47,8 +47,8 @@ module.exports = {
     const endAt = new Date(req.body.endAt);
     try {
       // persist in database
-      const currentMaxCode = Event.max("accessCode", {
-        where: { endAt: { [Op.lt]: new Date().toISOString() } }
+      const currentMaxCode = await Event.max("accessCode", {
+        where: { endAt: { [Sequelize.Op.lt]: new Date().toISOString() } }
       });
       console.log(currentMaxCode);
       const nextAccessCode = nextCode(currentMaxCode)

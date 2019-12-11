@@ -43,6 +43,8 @@ export class EventStore {
         name: eventData.name,
         startAt: eventData.startAt,
         endAt: eventData.endAt
+      }).error(err=>{
+        console.log(err)
       })
       .json(json => {
         runInAction(() => {

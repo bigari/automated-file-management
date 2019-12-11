@@ -15,9 +15,7 @@ import { Lock, LockOpen } from "@material-ui/icons/";
 
 const Info = observer(props => {
   //const classes = useStyles();
-  const eid = props.eid;
-  const eventStore = props.rootStore.eventStore;
-  const event = eventStore.events[eid];
+  const event = props.event;
   const [isDisplayable, setIsDisplayable] = useState(false);
   return (
     <Container maxWidth="md">

@@ -19,8 +19,6 @@ const Event = observer(props => {
   const rootStore = props.rootStore;
   const eventStore = rootStore.eventStore;
   const event = eventStore.events[eventId];
-
-  console.log(event);
   return (
     <Route
       render={props => (
@@ -74,7 +72,7 @@ const Event = observer(props => {
           <main style={{ paddingLeft: 82, paddingTop: 24 }}>
             <Route
               path={`/events/${eventId}/info`}
-              component={props => <Info eid={eventId} rootStore={rootStore} />}
+              component={props => <Info event={event}/>}
             />
             <Route
               path={`/events/${eventId}/qa`}
