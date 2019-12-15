@@ -41,9 +41,7 @@ const RepliesModal = function(props) {
       <Box style={{maxHeight: 400, overflow: 'auto'}}>
         <Question question={question} footer={false}/>
         <Box bgcolor="#ececeb" mb={2}>
-          {question.replies.map(reply => {
-            return <Reply reply={reply} />;
-          })}
+          <Reply reply={question.reply} />
         </Box>
       </Box>
 

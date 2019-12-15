@@ -24,25 +24,26 @@ module.exports = {
           email: "bigari7+afm1@gmail.com",
           password: bcrypt.hashSync("000000", salt),
           createdAt: new Date()
-        },
-        {
-          username: "steeve",
-          email: "bigari7+afm2@gmail.com",
-          password: bcrypt.hashSync("000000", salt),
-          createdAt: new Date()
-        },
-        {
-          username: "yerima",
-          email: "bigari7+afm3@gmail.com",
-          password: bcrypt.hashSync("000000", salt),
-          createdAt: new Date()
-        },
-        {
-          username: "yerima",
-          email: "test@gmail.com",
-          password: bcrypt.hashSync("test", salt),
-          createdAt: new Date()
         }
+        // ,
+        // {
+        //   username: "steeve",
+        //   email: "bigari7+afm2@gmail.com",
+        //   password: bcrypt.hashSync("000000", salt),
+        //   createdAt: new Date()
+        // },
+        // {
+        //   username: "yerima",
+        //   email: "bigari7+afm3@gmail.com",
+        //   password: bcrypt.hashSync("000000", salt),
+        //   createdAt: new Date()
+        // },
+        // {
+        //   username: "test",
+        //   email: "test@gmail.com",
+        //   password: bcrypt.hashSync("test", salt),
+        //   createdAt: new Date()
+        // }
       ],
       {}
     );
@@ -66,7 +67,7 @@ module.exports = {
         },
         {
           name: "Robotic & design",
-          ownerId: users[1].id,
+          ownerId: users[0].id,
           startAt: new Date(new Date().setMonth(now.getMonth() - 1)),
           endAt: now
         }
@@ -86,34 +87,14 @@ module.exports = {
         {
           content: "This is a question",
           timestamp: now,
-          eid: eids[0].id
+          eid: eids[0].id,
+          reply: "This is a reply"
         },
         {
           content: "This is also a question",
           timestamp: now,
-          eid: eids[0].id
-        }
-      ]
-    );
-
-    console.log("Seeding replies")
-
-    const qids = await Question.findAll({
-      attributes: ['id']  
-    });
-
-    await queryInterface.bulkInsert(
-      "Replies",
-      [
-        {
-          content: "This is a reply",
-          timestamp: now,
-          qid: qids[0].id
-        },
-        {
-          content: "This is also a reply",
-          timestamp: now,
-          qid: qids[0].id
+          eid: eids[0].id,
+          reply: "This is a reply"
         }
       ]
     );
@@ -122,7 +103,6 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     await queryInterface.bulkDelete("Events", null, {});
     await queryInterface.bulkDelete("Questions", null, {});
-    await queryInterface.bulkDelete("Replies", null, {});
     return queryInterface.bulkDelete("Users", null, {});
   }
 };

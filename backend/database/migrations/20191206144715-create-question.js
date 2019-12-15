@@ -18,6 +18,10 @@ module.exports = {
       content: {
         type: Sequelize.STRING
       },
+      reply: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       timestamp: {
         type: Sequelize.DATE
       }

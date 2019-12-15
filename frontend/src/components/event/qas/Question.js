@@ -52,12 +52,10 @@ export default function Question(props) {
     setOpen(false);
   };
 
-
-
   return (
     <Box p={2} borderTop={1} borderColor={borderColor}>
-      <Box pb={1}>{question.user}</Box>
-      <Box pb={2}>{question.timestamp}</Box>
+      <Box pb={1}>Anonymous</Box>
+      <Box pb={2}>{question.timestamp}</Box> 
       <Box pb={2}>{question.content}</Box>
 
       <Box display={footerVisibility}>
@@ -67,7 +65,8 @@ export default function Question(props) {
         justifyContent="space-between" 
         >
           <button class={classes.buttons} onClick={openModal}>
-            {question.replies.length} replies
+            {/* {question.replies.length} replies */}
+            replies
           </button>
           <IconButton
             onClick={showMenu}

@@ -63,8 +63,8 @@ app.get('/validateCookie',
   userController.validateCookie
 );
 
-app.get("/event/:eid/questions",
-  // passport.authenticate("jwt", {session: false}),
+app.get("/events/:eid/qas",
+  passport.authenticate("jwt", {session: false}),
   questionController.fetchQuestions.bind(questionController)
 );
 

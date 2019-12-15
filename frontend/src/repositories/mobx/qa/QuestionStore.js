@@ -2,18 +2,18 @@ import { observable, action, decorate, runInAction } from "mobx";
 import client from "../../client";
 
 export class QuestionStore {
-  questions;
+  questions = []
+  
+  constructor(root) {
+    this.root = root
+  }
 
   fetchQuestions(eid) {
-    console.log("Launching the request");
     client.api
-      .url(`/event/${eid}/questions`)
+      .url(`/events/${eid}/qas`)
       .get()
-      .json(response => {
-        runInAction(() => {
-          this.questions = response;
-          console.log(response);
-        });
+      .json(res => {
+          this.questions = res.questions
       })
       .catch(error => {
         console.log(error);
