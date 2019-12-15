@@ -81,7 +81,7 @@ const AddEventCard = function(props) {
   };
 
   return (
-    <Grid item xs={isAdding ? 12 : 3}>
+    <Grid item xs={isAdding || eventStore.isCreating ? 12 : 3}>
       <Box display="flex" justifyContent="center">
         {isAdding || eventStore.isCreating ? (
           <Box justify="center">

@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     startAt: DataTypes.DATE,
     endAt: DataTypes.DATE,
     name: DataTypes.STRING,
+    accessCode: DataTypes.STRING,
     ownerId: DataTypes.INTEGER
   }, {timestamps: false});
   Event.associate = function(models) {
