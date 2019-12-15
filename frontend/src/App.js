@@ -27,7 +27,6 @@ const theme = createMuiTheme({
 });
 
 const userStore = rootStore.userStore;
-const eventStore = rootStore.eventStore;
 
 const PrivateRoute = observer(({ children, ...rest }) => {
   const render = ({ location }) => {

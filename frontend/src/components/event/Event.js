@@ -17,6 +17,9 @@ import Info from "./info/Info"
 const Event = observer(props => {
   const { eventId } = useParams();
   const rootStore = props.rootStore;
+  const eventStore = rootStore.eventStore;
+  const event = eventStore.events[eventId];
+  
   return (
     <Route
       render={props => (
