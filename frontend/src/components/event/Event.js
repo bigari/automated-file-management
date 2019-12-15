@@ -17,12 +17,6 @@ import Info from "./info/Info"
 const Event = observer(props => {
   const { eventId } = useParams();
   const rootStore = props.rootStore;
-<<<<<<< HEAD
-
-=======
-  const eventStore = rootStore.eventStore;
-  const event = eventStore.events[eventId];
->>>>>>> 9210cb5be4e5beda3bbebaed3f00f1910ba8a4a3
   return (
     <Route
       render={props => (
@@ -91,13 +85,8 @@ const Event = observer(props => {
               component={props => <Info event={event}/>}
             />
             <Route
-<<<<<<< HEAD
               path={`/events/${eventId}/qas`}
               component={(props) => <QAs eid={eventId} rootStore={rootStore}/>}
-=======
-              path={`/events/${eventId}/qa`}
-              component={props => <QAs eid={eventId} rootStore={rootStore} />}
->>>>>>> 9210cb5be4e5beda3bbebaed3f00f1910ba8a4a3
             />
             <Route
               path={`/events/${eventId}/polls`}
