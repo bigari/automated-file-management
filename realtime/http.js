@@ -22,7 +22,7 @@ const sendHttp = async message => {
   try {
     res = await req
       .set("accept", "json")
-      .set("Authorization", `Bearer ${message.token}`)
+      .set("Authorization", `Bearer ${message.jwt}`)
       .send(message.data);
     return res.body;
   } catch {
