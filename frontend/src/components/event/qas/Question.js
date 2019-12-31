@@ -25,10 +25,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Question(props) {
+  const store = props.store;
   const classes = useStyles();
   const question = props.question;
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(null);
+  const [open, setOpen] = React.useState(false);
   const footerVisibility = (() => {
     if(props.footer === true || props.footer === undefined){
       return "visible"
@@ -43,7 +44,9 @@ export default function Question(props) {
     setAnchorEl(null);
   };
   const reply = function() {};
-  const deleteQuest = function() {};
+  const deleteQuest = function() {
+    store.deleteQuestionFromServer(question.id)
+  };
 
   const openModal = function() {
     setOpen(true);
@@ -64,7 +67,7 @@ export default function Question(props) {
         flexDirection="row" 
         justifyContent="space-between" 
         >
-          <button class={classes.buttons} onClick={openModal}>
+          <button className={classes.buttons} onClick={openModal}>
             {/* {question.replies.length} replies */}
             replies
           </button>
@@ -93,6 +96,7 @@ export default function Question(props) {
       
       <Modal open={open} onClose={closeModal}>
         <RepliesModal question={question}/>
+        {/* <div>hamza</div> */}
       </Modal>
     </Box>
   );

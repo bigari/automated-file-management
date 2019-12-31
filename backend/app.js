@@ -68,4 +68,20 @@ app.get("/events/:eid/qas",
   questionController.fetchQuestions.bind(questionController)
 );
 
+app.post("/questions/:qid/reply",
+  passport.authenticate("jwt", {session: false}),
+  questionController.reply.bind(questionController)
+);
+
+//check if owner
+app.delete('/questions/:qid',
+  passport.authenticate("jwt", {session: false}),
+  questionController.deleteQuestion.bind(questionController)
+);
+
+app.post("/events/:eid/qas",
+  passport.authenticate("jwt", {session: false}),
+  questionController.createQuestion.bind(questionController)
+);
+
 module.exports = app;

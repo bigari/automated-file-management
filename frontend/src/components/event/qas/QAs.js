@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 
 export default observer((props) => {
   const store = props.rootStore.questionStore;
+  store.init();
 
   return (
     <Container maxWidth="md">
@@ -12,7 +13,7 @@ export default observer((props) => {
         <Box>
           {
             store.questions.map(question => {
-              return <Question question={question} />;
+              return <Question question={question} store={store} key={question.id} />;
             })
           }
         </Box>

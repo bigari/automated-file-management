@@ -7,7 +7,7 @@ const sendHttp = async message => {
     try {
       res = await superagent
         .get(url)
-        .set("accept", "json")
+        .set("Accept", "application/json")
         .set("Authorization", `Bearer ${message.jwt}`);
       return res.body;
     } catch {
@@ -16,13 +16,18 @@ const sendHttp = async message => {
   }
   if (message.verb === "PUT") {
     req = superagent.put(url);
-  } else {
+  }
+  else if(message.verb === "DELETE") 
+  {
+    req = superagent.del(url);
+  } 
+  else {
     req = superagent.post(url);
   }
   try {
     res = await req
-      .set("accept", "json")
-      .set("Authorization", `Bearer ${message.token}`)
+      .set("Accept", "application/json")
+      .set("Authorization", `Bearer ${message.jwt}`)
       .send(message.data);
     return res.body;
   } catch {

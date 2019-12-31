@@ -6,6 +6,9 @@ export default class WebsocketService {
   }
   queue = [];
 
+  /**
+   * Defines and attaches ws listeners
+   */
   init() {
     if (this.isOpen) {
       return;
@@ -17,7 +20,7 @@ export default class WebsocketService {
       console.log("[open] Connection established");
     };
     this.socket.onmessage = event => {
-      //console.log(`[message] Data received from server: ${event.data}`);
+      console.log(`[message] Data received from server: ${event.data}`);
       const messageQueue = JSON.parse(event.data);
       for (const message of messageQueue) {
         this.routeToStore(message);
@@ -81,7 +84,10 @@ export default class WebsocketService {
         id: {
           questions: {
             POST: () => {
-              console.log(resources[1]);
+              const question = message.data.question
+              if(question) {
+                this.root.questionStore.addQuestionToLocal(question)
+              }
             },
             PUT: () => {}
           }
@@ -91,6 +97,14 @@ export default class WebsocketService {
         },
         POST: () => {},
         PUT: () => {}
+      },
+      questions: {
+        DELETE: () => {
+          const qid = message.data.qid
+          if(qid) {
+            this.root.questionStore.deleteQuestionFromLocal(qid)
+          }
+        }
       }
     };
     if (resources.length <= 2) {

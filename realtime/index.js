@@ -2,11 +2,18 @@ const WebSocket = require("ws");
 const sendHttp = require("./http");
 const wss = new WebSocket.Server({ port: 8080 });
 
+wss.broadcast = function broadcast(data) {
+  wss.clients.forEach(function each(client) {
+    client.send(data);
+  });
+};
+
 console.log("Starting realtime server");
 wss.on("connection", (ws, req) => {
   console.log(`Incomming connection => ${req.connection.remoteAddress}`);
   ws.on("message", async message => {
     console.log(`Received message => ${message}`);
+
     const messageWrapper = JSON.parse(message);
     const responseQueue = [];
     for (const messageJson of messageWrapper.queue) {
@@ -19,7 +26,9 @@ wss.on("connection", (ws, req) => {
       });
     }
     if (responseQueue.length > 0) {
-      ws.send(JSON.stringify(responseQueue));
+      wss.broadcast(JSON.stringify(responseQueue));
     }
   });
 });
+
+

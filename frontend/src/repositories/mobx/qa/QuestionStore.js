@@ -5,9 +5,16 @@ export class QuestionStore {
   questions = []
   
   constructor(root) {
-    this.root = root
+    this.root = root;
+    this.wss = root.webSocketService;
   }
 
+  // connects to ws and attaches listeners
+  init() {
+    this.wss.init();
+  }
+
+  // initially get data directly from database
   fetchQuestions(eid) {
     client.api
       .url(`/events/${eid}/qas`)
@@ -19,9 +26,44 @@ export class QuestionStore {
         console.log(error);
       });
   }
+
+  /**
+   * @param {int} qid 
+   */
+  deleteQuestionFromServer(qid) {
+    const message = {
+      verb: "DELETE",
+      url: `questions/${qid}`,
+      data: {}
+    }
+    this.wss.send(message)
+  }
+
+  /**
+   * @param {int} qid 
+   */
+  deleteQuestionFromLocal(qid) {
+    let i = 0
+    for(const question of this.questions) {
+      if(question.id == qid) {
+        this.questions.splice(i, 1)
+        return
+      }
+      i++
+    }
+  }
+
+  /**
+   * @param {string} question 
+   */
+  addQuestionToLocal(question) {
+    this.questions.push(question);
+  }
 }
 
 decorate(QuestionStore, {
   questions: observable,
-  fetchQuestions: action
+  fetchQuestions: action,
+  deleteLocalQuestion: action,
+  addQuestionToLocal: action
 });
