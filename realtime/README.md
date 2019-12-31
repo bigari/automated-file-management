@@ -24,6 +24,7 @@ A client can send a message queue with a given format, It will be forwarded to t
   ]
 }
 ```
+bcast is optional, true by default. Set explicitly to false if only the sender should receive the response.
 
 ### Response queue format
 
@@ -42,4 +43,3 @@ Each message in the queue map to a response
   }
 ]
 ```
-bcast is optional, true by default. Set explicitly to false if only the sender should receive the response.
