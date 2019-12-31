@@ -12,14 +12,21 @@ import {
 import SideNav, { NavItem, NavIcon, NavText } from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import QAs from "./qas/QAs";
-import Info from "./info/Info"
+import Info from "./info/Info";
 
 const Event = observer(props => {
   const { eventId } = useParams();
   const rootStore = props.rootStore;
   const eventStore = rootStore.eventStore;
   const event = eventStore.events[eventId];
-  
+
+  const wss= rootStore.webSocketService;
+  wss.init(`events/${event.id}`);
+  // webSocketService.send({
+  //   url: "events",
+  //   verb: "GET"
+  // });
+
   return (
     <Route
       render={props => (
@@ -35,16 +42,16 @@ const Event = observer(props => {
                 props.history.push(to);
               }
 
-              switch(selected) {
-                case 'qas':
-                  rootStore.questionStore.fetchQuestions(eventId)
-                  break
-                case 'polls':
-                  break
+              switch (selected) {
+                case "qas":
+                  rootStore.questionStore.fetchQuestions(eventId);
+                  break;
+                case "polls":
+                  break;
                 case "members":
-                  break
+                  break;
                 default:
-                  break
+                  break;
               }
             }}
             style={{ backgroundColor: "#320b86" }}
@@ -85,11 +92,11 @@ const Event = observer(props => {
           <main style={{ paddingLeft: 82, paddingTop: 24 }}>
             <Route
               path={`/events/${eventId}/info`}
-              component={props => <Info event={event}/>}
+              component={props => <Info event={event} />}
             />
             <Route
               path={`/events/${eventId}/qas`}
-              component={(props) => <QAs eid={eventId} rootStore={rootStore}/>}
+              component={props => <QAs eid={eventId} rootStore={rootStore} />}
             />
             <Route
               path={`/events/${eventId}/polls`}

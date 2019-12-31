@@ -5,7 +5,6 @@ import { observer } from "mobx-react";
 
 export default observer((props) => {
   const store = props.rootStore.questionStore;
-  store.init();
 
   return (
     <Container maxWidth="md">

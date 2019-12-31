@@ -56,9 +56,14 @@ module.exports = {
     },
     deleteQuestion: async (req, res) => {
         try {
-            //delete from database
             const qid = req.params.qid;
-            console.log(qid)
+            
+            await Question.destroy({
+                where: {
+                    id: qid
+                }
+            });
+
             res.status(200)
             .set("Content-Type", "application/json")
             .send({

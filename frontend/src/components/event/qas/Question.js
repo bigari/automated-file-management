@@ -45,7 +45,7 @@ export default function Question(props) {
   };
   const reply = function() {};
   const deleteQuest = function() {
-    store.deleteQuestionFromServer(question.id)
+    store.deleteQuestion(question.id)
   };
 
   const openModal = function() {

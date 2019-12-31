@@ -6,14 +6,11 @@ export default class WebsocketService {
   }
   queue = [];
 
-  /**
-   * Defines and attaches ws listeners
-   */
-  init() {
+  init(channelPath) {
     if (this.isOpen) {
       return;
     }
-    this.socket = new WebSocket("ws://localhost:5003");
+    this.socket = new WebSocket(`ws://localhost:5003/${channelPath}`);
     this.socket.onopen = event => {
       this.isOpen = true;
       this.sendQueue();
@@ -82,7 +79,7 @@ export default class WebsocketService {
     const ROUTES = {
       events: {
         id: {
-          questions: {
+          qas: {
             POST: () => {
               const question = message.data.question
               if(question) {
@@ -90,6 +87,14 @@ export default class WebsocketService {
               }
             },
             PUT: () => {}
+          },
+          polls: {
+            POST: () => {
+
+            },
+            PUT: () => {
+
+            }
           }
         },
         GET: () => {

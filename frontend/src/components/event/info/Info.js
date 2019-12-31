@@ -2,7 +2,7 @@ import React, { useState } from "react";
 //import { makeStyles } from "@material-ui/core/styles";
 import { Box, Container, IconButton, Typography } from "@material-ui/core";
 import { observer } from "mobx-react";
-import { Lock, LockOpen } from "@material-ui/icons/";
+import { VisibilityRounded, VisibilityOffRounded } from "@material-ui/icons/";
 
 // const useStyles = makeStyles(theme => ({
 //   buttons: {
@@ -39,9 +39,9 @@ const Info = observer(props => {
               onClick={() => setIsDisplayable(!isDisplayable)}
             >
               {isDisplayable ? (
-                <Lock fontSize="large" />
+                <VisibilityOffRounded fontSize="large" />
               ) : (
-                <LockOpen fontSize="large" />
+                <VisibilityRounded fontSize="large" />
               )}
             </IconButton>
           </Box>

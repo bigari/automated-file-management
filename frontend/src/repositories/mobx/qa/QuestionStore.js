@@ -9,10 +9,7 @@ export class QuestionStore {
     this.wss = root.webSocketService;
   }
 
-  // connects to ws and attaches listeners
-  init() {
-    this.wss.init();
-  }
+  
 
   // initially get data directly from database
   fetchQuestions(eid) {
@@ -30,7 +27,7 @@ export class QuestionStore {
   /**
    * @param {int} qid 
    */
-  deleteQuestionFromServer(qid) {
+  deleteQuestion(qid) {
     const message = {
       verb: "DELETE",
       url: `questions/${qid}`,
