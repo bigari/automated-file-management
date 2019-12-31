@@ -19,6 +19,7 @@ const Event = observer(props => {
   const rootStore = props.rootStore;
   const eventStore = rootStore.eventStore;
   const event = eventStore.events[eventId];
+  
   return (
     <Route
       render={props => (
@@ -32,6 +33,18 @@ const Event = observer(props => {
               const to = `/events/${eventId}/` + selected;
               if (props.location.pathname !== to) {
                 props.history.push(to);
+              }
+
+              switch(selected) {
+                case 'qas':
+                  rootStore.questionStore.fetchQuestions(eventId)
+                  break
+                case 'polls':
+                  break
+                case "members":
+                  break
+                default:
+                  break
               }
             }}
             style={{ backgroundColor: "#320b86" }}
@@ -50,7 +63,7 @@ const Event = observer(props => {
                 </NavIcon>
                 <NavText>Polls</NavText>
               </NavItem>
-              <NavItem eventKey="qa">
+              <NavItem eventKey="qas">
                 <NavIcon>
                   <QuestionAnswerRounded style={{ fontSize: "2em" }} />
                 </NavIcon>
@@ -75,8 +88,8 @@ const Event = observer(props => {
               component={props => <Info event={event}/>}
             />
             <Route
-              path={`/events/${eventId}/qa`}
-              component={props => <QAs eid={eventId} rootStore={rootStore} />}
+              path={`/events/${eventId}/qas`}
+              component={(props) => <QAs eid={eventId} rootStore={rootStore}/>}
             />
             <Route
               path={`/events/${eventId}/polls`}

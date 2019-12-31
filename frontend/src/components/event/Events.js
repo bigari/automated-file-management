@@ -32,7 +32,6 @@ const Events = observer(props => {
   useEffect(() => {
     async function fetchEvents() {
       await eventStore.fetchAll();
-      // console.log(eventStore.list);
     }
     fetchEvents();
   }, [eventStore]);

@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     Event.hasMany(models.Question, { foreignKey: "eid", as: "questions" });
     Event.belongsTo(models.User, { foreignKey: "ownerId", as: "owner" });
 
-    Event.hasMany(models.Poll, {
-      foreignKey: "eventId",
-      as: "polls"
-    });
+    // Event.hasMany(models.Poll, {
+    //   foreignKey: "eventId",
+    //   as: "polls"
+    // });
   };
   return Event;
 };

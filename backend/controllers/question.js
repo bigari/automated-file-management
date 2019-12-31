@@ -1,7 +1,6 @@
 const { Question } = require("../database/models/index");
 
 module.exports = {
- 
     fetchQuestions: async (req, res) => {
         try{
             const questions = await Question.findAll({
@@ -13,11 +12,12 @@ module.exports = {
             const jsonQuests = questions.map(question => {
                 return question.dataValues
             })
-            
             res
             .status(200)
             .set("Content-Type", "application/json")
-            .send(jsonQuests);
+            .send({
+                questions: jsonQuests
+            });
 
         }catch(e) {
             res
