@@ -81,9 +81,18 @@ export default class WebsocketService {
         id: {
           questions: {
             POST: () => {
-              console.log(resources[1]);
+              console.log(resources[1]) // event id;
+              // resources[3]: question id
             },
             PUT: () => {}
+          },
+          polls: {
+            POST: () => {
+
+            },
+            PUT: () => {
+
+            }
           }
         },
         GET: () => {
