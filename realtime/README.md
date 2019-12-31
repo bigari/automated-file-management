@@ -9,6 +9,9 @@ A client can send a message queue with a given format, It will be forwarded to t
 
 ```json
 {
+  // If false, only the sender receives the response
+  // Optionnal, default true
+  "bcast": true,
   "jwt": "<token>",
   "queue": [
     {

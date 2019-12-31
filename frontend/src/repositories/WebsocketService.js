@@ -6,11 +6,11 @@ export default class WebsocketService {
   }
   queue = [];
 
-  init() {
+  init(channelPath) {
     if (this.isOpen) {
       return;
     }
-    this.socket = new WebSocket("ws://localhost:5003");
+    this.socket = new WebSocket(`ws://localhost:5003/${channelPath}`);
     this.socket.onopen = event => {
       this.isOpen = true;
       this.sendQueue();
