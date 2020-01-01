@@ -7,6 +7,7 @@ const { check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const passport = require("./passport");
 const questionController = require("./controllers/question");
+const memberController = require("./controllers/member");
 
 const app = express();
 
@@ -85,6 +86,19 @@ app.delete('/questions/:qid',
 // check if participant (different middleware jwt validation)
 app.post("/events/:eid/qas",
   questionController.createQuestion.bind(questionController)
+);
+
+//When user invite contributor
+app.post(
+  "/events/:eid/members",
+  passport.authenticate("jwt", { session: false }),
+  eventController.addMember.bind(eventController)
+);
+
+//When anonymous user join event with accessCode
+app.post(
+  "/members",
+  memberController.create.bind(memberController)
 );
 
 module.exports = app;
