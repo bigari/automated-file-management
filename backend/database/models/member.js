@@ -11,11 +11,12 @@ module.exports = (sequelize, DataTypes) => {
   );
   Member.associate = function(models) {
     // associations can be defined here
+    Member.belongsTo(models.User, { foreignKey: "userId", as: "user" });
+    Member.belongsTo(models.Event, {
+      foreignKey: "eventId",
+      as: "event"
+    });
   };
-  Member.belongsTo(models.User, { foreignKey: "userId", as: "user" });
-  Member.belongsTo(models.Event, {
-    foreignKey: "eventId",
-    as: "event"
-  });
+  
   return Member;
 };

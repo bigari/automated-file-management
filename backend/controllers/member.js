@@ -60,5 +60,6 @@ module.exports = {
 
   auth: (req, res) => {
     //Should define a passport strategy for mjwt
+    
   }
 };

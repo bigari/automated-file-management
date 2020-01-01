@@ -65,25 +65,20 @@ app.get('/validateCookie',
   userController.validateCookie
 );
 
-// check owner or participant
 app.get("/events/:eid/qas",
-  passport.authenticate("jwt", {session: false}),
   questionController.fetchQuestions.bind(questionController)
 );
 
-//check if owner (middleware check)
 app.post("/questions/:qid/reply",
   passport.authenticate("jwt", {session: false}),
   questionController.reply.bind(questionController)
 );
 
-//check if owner
 app.delete('/questions/:qid',
   passport.authenticate("jwt", {session: false}),
   questionController.deleteQuestion.bind(questionController)
 );
 
-// check if participant (different middleware jwt validation)
 app.post("/events/:eid/qas",
   questionController.createQuestion.bind(questionController)
 );

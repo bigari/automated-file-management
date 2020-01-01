@@ -59,7 +59,7 @@ module.exports = {
   },
 
   addMember: async function (req, res) {
-    const userId = req.user.id,
+    const userId = req.user.id
     const role = 1
     const eid = req.params.eid;
     try {

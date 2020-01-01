@@ -2,11 +2,10 @@ const { Question, Reply } = require("../database/models/index");
 
 module.exports = {
 
-    // Authorized: owner - participants 
     fetchQuestions: async (req, res) => {
         try{
             const questions = await Question.findAll({
-                where: {eid: req.params.eid}
+                where: {eid: req.params.eidid}
             });
             
             const qas = await Promise.all(questions.map(async (question) => {
@@ -31,7 +30,6 @@ module.exports = {
         }
     },
 
-    // Auth: only staff members related to that specific events
     reply: async (req, res) => {
         try {
             const qid = req.params.qid
@@ -58,7 +56,6 @@ module.exports = {
         }
     },
 
-    // Auth: only staff members
     deleteQuestion: async (req, res) => {
         try {
             const qid = req.params.qid;
@@ -80,7 +77,6 @@ module.exports = {
         }
     },
 
-    //Auth: only participants
     createQuestion: async (req, res) => {
         try {
             let question = req.body
