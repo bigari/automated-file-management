@@ -28,7 +28,7 @@ bcast is optional, true by default. Set explicitly to false if only the sender s
 
 ### Response queue format
 
-Each message in the queue map to a response
+Each message in the queue maps to a response
 
 ```json
 [
