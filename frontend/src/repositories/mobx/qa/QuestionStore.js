@@ -2,14 +2,12 @@ import { observable, action, decorate } from "mobx";
 import client from "../../client";
 
 export class QuestionStore {
-  questions = []
+  qas = []
   
   constructor(root) {
     this.root = root;
     this.wss = root.webSocketService;
   }
-
-  
 
   // initially get data directly from database
   fetchQuestions(eid) {
@@ -17,7 +15,7 @@ export class QuestionStore {
       .url(`/events/${eid}/qas`)
       .get()
       .json(res => {
-          this.questions = res.questions
+          this.qas = res.qas
       })
       .catch(error => {
         console.log(error);
@@ -41,9 +39,9 @@ export class QuestionStore {
    */
   deleteQuestionFromLocal(qid) {
     let i = 0
-    for(const question of this.questions) {
-      if(question.id == qid) {
-        this.questions.splice(i, 1)
+    for(const question of this.qas) {                               
+      if(question.id == qid) {                                                                  
+        this.qas.splice(i, 1)
         return
       }
       i++
@@ -54,13 +52,36 @@ export class QuestionStore {
    * @param {string} question 
    */
   addQuestionToLocal(question) {
-    this.questions.push(question);
+    this.qas.push(question);
+  }
+
+  sendReply(qid, reply) {
+    const message = {
+      verb: 'POST',
+      url: `questions/${qid}/reply`,
+      data: {
+        reply: reply
+      }
+    }
+    this.wss.send(message)
+  }
+
+  addReplyToLocal(message) {
+    let i = 0
+    for(const question of this.qas) {                               
+      if(question.id == message.qid) {                                                                  
+        question.replies.push(message.reply)
+        return
+      }
+      i++
+    }
   }
 }
 
 decorate(QuestionStore, {
-  questions: observable,
+  qas: observable,
   fetchQuestions: action,
-  deleteLocalQuestion: action,
-  addQuestionToLocal: action
+  deleteQuestionFromLocal: action,
+  addQuestionToLocal: action,
+  addReplyToLocal: action
 });

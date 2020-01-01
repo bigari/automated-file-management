@@ -68,6 +68,7 @@ app.get("/events/:eid/qas",
   questionController.fetchQuestions.bind(questionController)
 );
 
+//check if owner
 app.post("/questions/:qid/reply",
   passport.authenticate("jwt", {session: false}),
   questionController.reply.bind(questionController)

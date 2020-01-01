@@ -11,7 +11,7 @@ export default observer((props) => {
       <Paper>
         <Box>
           {
-            store.questions.map(question => {
+            store.qas.map(question => {
               return <Question question={question} store={store} key={question.id} />;
             })
           }

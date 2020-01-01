@@ -5,6 +5,8 @@ import SendIcon from "@material-ui/icons/Send";
 import Question from "./Question";
 import Reply from "./Reply";
 import grey from '@material-ui/core/colors/grey';
+import { observer } from "mobx-react";
+
 
 const borderColor = grey[300];
 
@@ -28,20 +30,31 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const RepliesModal = function(props) {
+const RepliesModal = observer(function(props) {
   const classes = useStyles();
   const question = props.question;
+  const questionStore = props.store;
+  const [reply, setReply] = React.useState('');
+
+  const sendReply = function() {
+    questionStore.sendReply(question.id, reply)
+    setReply('')
+  }
 
   return (
-    <Box class={classes.modal}>
-      <div class={classes.header}>
+    <Box className={classes.modal}>
+      <div className={classes.header}>
         Replies
       </div>
 
       <Box style={{maxHeight: 400, overflow: 'auto'}}>
         <Question question={question} footer={false}/>
         <Box bgcolor="#ececeb" mb={2}>
-          <Reply reply={question.reply} />
+          <Box bgcolor="#ececeb" mb={2}>
+          {question.replies.map(reply => {
+            return <Reply reply={reply} key={reply.id} />;
+          })}
+        </Box>
         </Box>
       </Box>
 
@@ -57,18 +70,19 @@ const RepliesModal = function(props) {
       >
         <TextField
           fullWidth={true}
-          flexGrow={1}
+          value={reply ? reply : ''} 
+          onChange={event => setReply(event.target.value)}
           id="reply"
           label="Type your reply"
           multiline
           margin="normal"
         />
-        <IconButton size="small" classes={{ root: classes.icon }}>
+        <IconButton size="small" classes={{ root: classes.icon }} onClick={sendReply}>
           <SendIcon />
         </IconButton>
       </Box>
     </Box>
   );
-};
+});
 
 export default RepliesModal;

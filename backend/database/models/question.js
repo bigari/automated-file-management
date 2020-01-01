@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     eid: {
       type: DataTypes.INTEGER,
       notNull: true
-    },
-    reply: DataTypes.STRING
+    }
   }, {timestamps: false});
   Question.associate = function(models) {
-    Question.belongsTo(models.Event, { foreignKey: "eid", as: "event" })
+    Question.belongsTo(models.Event, { foreignKey: "eid", as: "event"})
+    Question.hasMany(models.Reply, { foreignKey: "qid", as: "replies" });
   };
   return Question;
 

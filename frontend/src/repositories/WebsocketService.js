@@ -109,6 +109,16 @@ export default class WebsocketService {
           if(qid) {
             this.root.questionStore.deleteQuestionFromLocal(qid)
           }
+        },
+        id: {
+          reply: {
+            POST: () => {
+              const qid = message.data.qid;
+              if(qid) {
+                this.root.questionStore.addReplyToLocal(message.data)
+              }
+            }
+          }
         }
       }
     };

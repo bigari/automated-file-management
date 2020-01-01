@@ -68,7 +68,7 @@ export default function Question(props) {
         justifyContent="space-between" 
         >
           <button className={classes.buttons} onClick={openModal}>
-            {/* {question.replies.length} replies */}
+            {question.replies.length} replies
             replies
           </button>
           <IconButton
@@ -95,8 +95,7 @@ export default function Question(props) {
       </Box>
       
       <Modal open={open} onClose={closeModal}>
-        <RepliesModal question={question}/>
-        {/* <div>hamza</div> */}
+        <RepliesModal question={question} store={store}/>
       </Modal>
     </Box>
   );

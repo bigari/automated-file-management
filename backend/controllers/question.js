@@ -1,27 +1,24 @@
-const { Question } = require("../database/models/index");
-
-
-const validateReply = function(req) {
-    console.log(req.body)
-}
+const { Question, Reply } = require("../database/models/index");
 
 module.exports = {
     fetchQuestions: async (req, res) => {
         try{
             const questions = await Question.findAll({
-                where: {
-                    eid: req.params.eid
-                }
+                where: {eid: req.params.eid}
             });
+            
+            const qas = await Promise.all(questions.map(async (question) => {
+                let qa = question.dataValues
+                let replies = await question.getReplies()
+                qa.replies = replies.map(reply => reply.dataValues)
+                return qa 
+            }))
 
-            const jsonQuests = questions.map(question => {
-                return question.dataValues
-            })
             res
             .status(200)
             .set("Content-Type", "application/json")
             .send({
-                questions: jsonQuests
+                qas: qas
             });
 
         }catch(e) {
@@ -31,21 +28,23 @@ module.exports = {
             .send({error: e.message})
         }
     },
-
     reply: async (req, res) => {
         try {
-            res.status(200)
+            const qid = req.params.qid
+            let reply = req.body.reply
+            reply = await Reply.create({
+                content: reply,
+                timestamp: new Date(),
+                qid: qid
+            })
+
+            res
+            .status(200)
             .set("Content-Type", "application/json")
-            .send(req.body);
-            // const qid = req.params.id
-            // const reply = req.body.reply
-            // const question = await Question.findOne(qid)
-
-            // await question.update({
-            //     reply: reply
-            // })
-
-            // res.status(200)
+            .send({
+                qid: qid, 
+                reply: reply
+            })
         }
         catch(e) {
             res
@@ -57,11 +56,8 @@ module.exports = {
     deleteQuestion: async (req, res) => {
         try {
             const qid = req.params.qid;
-            
             await Question.destroy({
-                where: {
-                    id: qid
-                }
+                where: {id: qid}
             });
 
             res.status(200)
@@ -83,9 +79,10 @@ module.exports = {
             question = await Question.create({
                 content: question.content,
                 timestamp: new Date(),
-                eid: req.params.eid,
-                reply: ""
+                eid: req.params.eid
               });
+
+            question.replies = []
             
             res.status(200)
             .set("Content-Type", "application/json")
