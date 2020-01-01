@@ -58,7 +58,7 @@ export default function Question(props) {
   return (
     <Box p={2} borderTop={1} borderColor={borderColor}>
       <Box pb={1}>Anonymous</Box>
-      <Box pb={2}>{question.timestamp}</Box> 
+      <Box pb={2}>{new Date(question.timestamp).toLocaleString()}</Box> 
       <Box pb={2}>{question.content}</Box>
 
       <Box display={footerVisibility}>
@@ -69,7 +69,6 @@ export default function Question(props) {
         >
           <button className={classes.buttons} onClick={openModal}>
             {question.replies.length} replies
-            replies
           </button>
           <IconButton
             onClick={showMenu}
@@ -88,7 +87,7 @@ export default function Question(props) {
             open={Boolean(anchorEl)}
             onClose={closeMenu}
           >
-            <MenuItem onClick={reply}>reply</MenuItem>
+            <MenuItem onClick={openModal}>reply</MenuItem>
             <MenuItem onClick={deleteQuest}>delete</MenuItem>
           </Menu>
         </Box>

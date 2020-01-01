@@ -52,6 +52,7 @@ app.post(
   passport.authenticate("jwt", { session: false }),
   eventController.create.bind(eventController)
 );
+
 app.get(
   "/events",
   passport.authenticate("jwt", { session: false }),
@@ -63,12 +64,13 @@ app.get('/validateCookie',
   userController.validateCookie
 );
 
+// check owner or participant
 app.get("/events/:eid/qas",
   passport.authenticate("jwt", {session: false}),
   questionController.fetchQuestions.bind(questionController)
 );
 
-//check if owner
+//check if owner (middleware check)
 app.post("/questions/:qid/reply",
   passport.authenticate("jwt", {session: false}),
   questionController.reply.bind(questionController)
@@ -80,8 +82,8 @@ app.delete('/questions/:qid',
   questionController.deleteQuestion.bind(questionController)
 );
 
+// check if participant (different middleware jwt validation)
 app.post("/events/:eid/qas",
-  passport.authenticate("jwt", {session: false}),
   questionController.createQuestion.bind(questionController)
 );
 

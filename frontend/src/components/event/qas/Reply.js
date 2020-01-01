@@ -24,18 +24,19 @@ const Reply = function(props) {
         display="flex"
         flexDirection="horizontal"
         justifyContent="space-between"
+        alignContent="flexStart"
       >
         {/* username + timestamp */}
         <Box>
-          <Box pb={1}>{reply.username} - Moderator</Box>
-          <Box pb={2}>{reply.timestamp}</Box>
+          <Box pb={1}>{reply.username}Moderator</Box>
+          <Box pb={2}>{new Date(reply.timestamp).toLocaleString()}</Box>
         </Box>
 
         {/* dropdown option button */}
         <IconButton
-          onClick={showMenu}
           disableRipple={true}
           disableFocusRipple={true}
+          onClick={showMenu}
           size="small"
         >
           <MoreHorizIcon />
@@ -48,7 +49,7 @@ const Reply = function(props) {
           open={Boolean(anchorEl)}
           onClose={closeMenu}
         >
-          <MenuItem onClick={edit}>reply</MenuItem>
+          <MenuItem onClick={edit}>edit</MenuItem>
           <MenuItem onClick={deleteReply}>delete</MenuItem>
         </Menu>
       </Box>
