@@ -43,6 +43,7 @@ export default function Question(props) {
   const closeMenu = function() {
     setAnchorEl(null);
   };
+  // eslint-disable-next-line
   const reply = function() {};
   const deleteQuest = function() {
     store.deleteQuestion(question.id)

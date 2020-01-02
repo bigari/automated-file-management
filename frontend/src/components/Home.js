@@ -1,6 +1,7 @@
 import React from "react";
 import conference from "../icons/conference.png";
 import NavBar from "./NavBar";
+import JoinEvent from "./event/JoinEvent";
 
 const Home = props => {
   return (
@@ -10,7 +11,7 @@ const Home = props => {
         <header className="App-header">
           <div>
             <img src={conference} className="App-logo" alt="logo" />
-            <p>Give life to your conference</p>
+            <JoinEvent/>
           </div>
         </header>
       </div>
