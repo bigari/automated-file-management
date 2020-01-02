@@ -31,11 +31,11 @@ wss.on("connection", (ws, req) => {
     }
     if (responseQueue.length > 0) {
       const bcast = messageWrapper.bcast;
-      // if (bcast === undefined || bcast) {
+      if (bcast === undefined || bcast) {
         cm.broadcast(channel, responseQueue);
-      // } else {
-        // ws.send(JSON.stringify(responseQueue));
-      // }
+      } else {
+        ws.send(JSON.stringify(responseQueue));
+      }
     }
   });
 

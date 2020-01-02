@@ -35,10 +35,23 @@ const RepliesModal = observer(function(props) {
   const question = props.question;
   const questionStore = props.store;
   const [reply, setReply] = React.useState('');
+  const [error, setError] = React.useState('');
+
+  const validateReply = function(reply) {
+    if(reply === undefined || reply.length === 0) throw new Error("A reply can't be empty.")
+    else if(reply.length > 100) throw new Error("The reply is too long, 100 characters max.")
+  } 
 
   const sendReply = function() {
-    questionStore.sendReply(question.id, reply)
-    setReply('')
+    try{
+      setError('')
+      validateReply(reply.trim())
+      questionStore.sendReply(question.id, reply)
+      setReply('')
+    }
+    catch(e) {
+      setError(e.message)
+    }
   }
 
   return (
@@ -76,6 +89,8 @@ const RepliesModal = observer(function(props) {
           label="Type your reply"
           multiline
           margin="normal"
+          helperText={error}
+          error={Boolean(error)}
         />
         <IconButton size="small" classes={{ root: classes.icon }} onClick={sendReply}>
           <SendIcon />

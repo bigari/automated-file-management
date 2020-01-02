@@ -43,7 +43,6 @@ export default function Question(props) {
   const closeMenu = function() {
     setAnchorEl(null);
   };
-  const reply = function() {};
   const deleteQuest = function() {
     store.deleteQuestion(question.id)
   };
