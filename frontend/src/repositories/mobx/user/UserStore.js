@@ -2,6 +2,7 @@ import { observable, action, computed, decorate } from "mobx";
 import client from "../../client";
 
 export class UserStore {
+  anonymousUser;
   user;
   pending = true;
   signinError;
@@ -107,12 +108,28 @@ export class UserStore {
       .url("/validateCookie")
       .get()
       .json(({ user }) => {
-        this.pending = false;
+        //this.pending = false;
         this.user = user;
+        this.anonymousAuth();
       })
       .catch(error => {
-        this.pending = false;
+        this.anonymousAuth();
       });
+  }
+
+  anonymousAuth() {
+    client.api
+    .url("/anonymous-users/auth")
+    .get()
+    .json(({ anonymousUser }) => {
+      //this.pending = false;
+      this.anonymousUser = anonymousUser;
+      this.pending = false;
+    })
+    .catch(error => {
+      console.log(error)
+      this.pending = false;
+    });
   }
 }
 
