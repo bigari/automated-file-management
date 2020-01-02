@@ -10,8 +10,8 @@ const Home = props => {
       <div className="App">
         <header className="App-header">
           <div>
-            <img src={conference} className="App-logo" alt="logo" />
             <JoinEvent/>
+            <img src={conference} className="App-logo" alt="logo" />
           </div>
         </header>
       </div>

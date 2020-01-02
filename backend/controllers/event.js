@@ -1,4 +1,9 @@
-const { Event, Member, Sequelize } = require("../database/models/index");
+const {
+  Event,
+  Member,
+  Sequelize,
+  sequelize
+} = require("../database/models/index");
 
 const BLOCK_SIZE = 100;
 const MAX_CODE_NUM = parseInt("ZZZZZZ", 36) + 1;
@@ -24,21 +29,21 @@ const nextCode = accessCode => {
 
 module.exports = {
   //List all events current user is part of
-  checkOwnership: async function (userId, eventId) {
+  checkOwnership: async function(userId, eventId) {
     if (!userId) {
-        return false;
+      return false;
     }
     const event = await Event.findOne({
-        where: {
-            ownerId: userId,
-            id: eventId
-        }
+      where: {
+        ownerId: userId,
+        id: eventId
+      }
     });
-    
+
     if (event) {
-        return true
+      return true;
     }
-    return false
+    return false;
   },
 
   list: async function(req, res) {
@@ -58,36 +63,38 @@ module.exports = {
     }
   },
 
-  addMember: async function (req, res) {
-    const userId = req.user.id
-    const role = 1
+  addMember: async function(req, res) {
+    const userId = req.user.id;
+    const role = 1;
     const eid = req.params.eid;
     try {
-      const isOwner = await this.checkOwnership(userId, eid)
+      //Is now irrelevant I guess, since passport handles that
+      const isOwner = await this.checkOwnership(userId, eid);
       if (!isOwner) {
-       res.status(401)
-        .set("Content-Type", "application/json")
-        .send({ errors: {message: "Sorry, you do not own this event."} });
+        res
+          .status(401)
+          .set("Content-Type", "application/json")
+          .send({ errors: { message: "Sorry, you do not own this event." } });
         return;
       }
       const member = await Member.create({
         eventId: eid,
         role: role,
-        userId: userId
-      })
-      res.status(200)
+        userId: userId,
+        auid: 0 //Would fail otherwise because of constraints
+      });
+      res
+        .status(200)
         .set("Content-Type", "application/json")
-        .send({member: {...member.dataValues}});
-    
+        .send({ member: { ...member.dataValues } });
     } catch (e) {
-      console.log(e)
+      console.log(e);
       res
         .status(500)
         .set("Content-Type", "application/json")
         .send({ error: "An error has occurred, please try again later." });
     }
-
-  },  
+  },
 
   create: async function(req, res) {
     const name = req.body.name;
@@ -99,14 +106,30 @@ module.exports = {
         where: { endAt: { [Sequelize.Op.lt]: new Date().toISOString() } }
       });
       console.log(currentMaxCode);
-      const nextAccessCode = nextCode(currentMaxCode)
+      const nextAccessCode = nextCode(currentMaxCode);
       console.log(nextAccessCode);
-      const event = await Event.create({
-        name: name,
-        ownerId: req.user.id,
-        accessCode: nextAccessCode,
-        startAt: startAt,
-        endAt: endAt
+
+      const event = await sequelize.transaction(async t => {
+        const _event = await Event.create(
+          {
+            name: name,
+            ownerId: req.user.id,
+            accessCode: nextAccessCode,
+            startAt: startAt,
+            endAt: endAt
+          },
+          { transaction: t }
+        );
+        await Member.create(
+          {
+            eventId: _event.id,
+            userId: req.user.id,
+            role: 0,
+            auid: 0
+          },
+          { transaction: t }
+        );
+        return _event;
       });
       res
         .status(200)

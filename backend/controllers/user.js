@@ -23,7 +23,7 @@ module.exports = {
         iss: "afm",
         sub: id,
         iat: new Date().getTime(),
-        exp: new Date().getTime() + 3600
+        exp: new Date().getTime() + jwtExpiration
       },
       jwtSecret
     );
@@ -170,7 +170,7 @@ module.exports = {
   validateCookie: (req, res) => {
     const user = req.user;
     delete user.dataValues.password;
-    user.dataValues.jwt = req.cookies["jwt"] 
+    user.dataValues.jwt = req.cookies["jwt"];
     res.status(200).send({ user: user });
   }
 };

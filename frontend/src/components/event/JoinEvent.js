@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
-import IconButton from "@material-ui/core/IconButton";
+//import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { InputRounded } from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 // import { Switch, Route, useRouteMatch } from "react-router-dom";
 
@@ -47,9 +48,15 @@ const JoinEvent = observer(props => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton aria-label="Join" onClick={e => {}} edge="end">
-                  <InputRounded />
-                </IconButton>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  aria-label="Join"
+                  onClick={e => {}}
+                  startIcon={<InputRounded/>}
+                >
+                  Join
+                </Button>
               </InputAdornment>
             )
           }}

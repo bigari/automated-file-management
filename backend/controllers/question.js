@@ -5,7 +5,7 @@ module.exports = {
     fetchQuestions: async (req, res) => {
         try{
             const questions = await Question.findAll({
-                where: {eid: req.params.eidid}
+                where: {eid: req.params.eid}
             });
             
             const qas = await Promise.all(questions.map(async (question) => {
