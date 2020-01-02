@@ -1,7 +1,6 @@
-const { Event, Member, Sequelize } = require("../database/models/index");
+const { Event, Member } = require("../database/models/index");
 const JWT = require("jsonwebtoken");
 const jwtSecret = process.env["JWT_SECRET"];
-const jwtExpiration = 3600;
 
 module.exports = {
   genToken: function(id, now, eventEndDate) {
@@ -10,14 +9,14 @@ module.exports = {
         iss: "afm",
         sub: id,
         iat: now,
-        exp: endDate
+        exp: eventEndDate
       },
       jwtSecret
     );
   },
 
   create: async function(req, res) {
-    const accessCode = req.body.eid;
+    const accessCode = req.body.accessCode;
     const event = await Event.findOne({
       where: {
         accessCode: accessCode
@@ -27,8 +26,8 @@ module.exports = {
       res
         .status(401)
         .set("Content-Type", "application/json")
-        .send({ error: "Invalid access code"});
-        return;
+        .send({ error: "Invalid access code" });
+      return;
     }
     try {
       const member = await Member.create({
@@ -37,15 +36,19 @@ module.exports = {
         userId: 0
       });
 
-      const now = new Date().getTime()
-      const jwtToken = await this.genToken(member.id, now, event.endDate.getTime());
+      const now = new Date().getTime();
+      const jwtToken = await this.genToken(
+        member.id,
+        now,
+        event.endDate.getTime()
+      );
       res.cookie(`mjwt_${event.id}`, jwtToken, {
-        maxAge: (event.endDate.getTime()-now),
+        maxAge: event.endDate.getTime() - now,
         secure: false,
         httpOnly: true
       });
 
-      member.dataValues[`mjwt_${event.id}`]=jwtToken;
+      member.dataValues[`mjwt_${event.id}`] = jwtToken;
       res
         .status(200)
         .set("Content-Type", "application/json")
@@ -60,6 +63,5 @@ module.exports = {
 
   auth: (req, res) => {
     //Should define a passport strategy for mjwt
-    
   }
 };

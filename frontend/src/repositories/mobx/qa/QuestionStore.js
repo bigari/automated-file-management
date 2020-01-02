@@ -40,7 +40,7 @@ export class QuestionStore {
   deleteQuestionFromLocal(qid) {
     let i = 0
     for(const question of this.qas) {                               
-      if(question.id == qid) {                                                                  
+      if(question.id === qid) {                                                                  
         this.qas.splice(i, 1)
         return
       }
@@ -71,9 +71,14 @@ export class QuestionStore {
   }
 
   addReplyToLocal(message) {
+    // eslint-disable-next-line
     let i = 0
     for(const question of this.qas) {                               
+<<<<<<< HEAD
       if(question.id == message.qid) {
+=======
+      if(question.id === message.qid) {                                                                  
+>>>>>>> 2eed2c457597a180b236ea7d5ef8dd501f2b3428
         question.replies.push(message.reply)
         return
       }
