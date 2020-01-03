@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { observer } from "mobx-react";
-//import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { InputRounded } from "@material-ui/icons";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-
-// import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -19,11 +17,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const JoinEvent = observer(props => {
-  //const rootStore = props.rootStore;
-  // const eventStore = rootStore.eventStore;
-  // const userStore = rootStore.userStore;
+  const userStore = props.userStore;
   const classes = useStyles();
   const [accessCode, setAccessCode] = useState("");
+  const history = useHistory();
+
+  const join = () => {
+    userStore.join(accessCode, {
+      onSuccess: () => {
+        const event = userStore.member.event;
+        history.push(`/events/${event.id}/info`);
+      },
+      onError: () => {
+        console.log("error joining");
+      }
+    });
+  };
 
   return (
     <div>
@@ -52,8 +61,9 @@ const JoinEvent = observer(props => {
                   variant="contained"
                   color="primary"
                   aria-label="Join"
-                  onClick={e => {}}
-                  startIcon={<InputRounded/>}
+                  disabled={userStore.joining}
+                  onClick={join}
+                  startIcon={<InputRounded />}
                 >
                   Join
                 </Button>

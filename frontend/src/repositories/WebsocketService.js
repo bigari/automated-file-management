@@ -6,6 +6,17 @@ export default class WebsocketService {
   }
   queue = [];
 
+  authParams() {
+    const params = {};
+    if (this.root.userStore.isLoggedIn) {
+      params.jwt = this.root.userStore.user.jwt;
+    }
+    if (this.root.userStore.anonymousUser) {
+      params.ajwt = this.root.userStore.anonymousUser.ajwt;
+    }
+    return params;
+  }
+
   init(channelPath) {
     if (this.isOpen) {
       return;
@@ -41,10 +52,10 @@ export default class WebsocketService {
   }
 
   sendQueue() {
-    if (this.isOpen) {
+    if (this.isOpen && this.queue.length > 0) {
       this.socket.send(
         JSON.stringify({
-          jwt: this.root.userStore.user.jwt,
+          ...this.authParams(),
           queue: this.queue
         })
       );
@@ -81,20 +92,16 @@ export default class WebsocketService {
         id: {
           qas: {
             POST: () => {
-              const question = message.data.question
-              if(question) {
-                this.root.questionStore.addQuestionToLocal(question)
+              const question = message.data.question;
+              if (question) {
+                this.root.questionStore.addQuestionToLocal(question);
               }
             },
             PUT: () => {}
           },
           polls: {
-            POST: () => {
-
-            },
-            PUT: () => {
-
-            }
+            POST: () => {},
+            PUT: () => {}
           }
         },
         GET: () => {
@@ -105,17 +112,17 @@ export default class WebsocketService {
       },
       questions: {
         DELETE: () => {
-          const qid = message.data.qid
-          if(qid) {
-            this.root.questionStore.deleteQuestionFromLocal(qid)
+          const qid = message.data.qid;
+          if (qid) {
+            this.root.questionStore.deleteQuestionFromLocal(qid);
           }
         },
         id: {
           reply: {
             POST: () => {
               const qid = message.data.qid;
-              if(qid) {
-                this.root.questionStore.addReplyToLocal(message.data)
+              if (qid) {
+                this.root.questionStore.addReplyToLocal(message.data);
               }
             }
           }

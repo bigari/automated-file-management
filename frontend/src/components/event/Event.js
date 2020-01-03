@@ -18,15 +18,19 @@ const Event = observer(props => {
   const { eventId } = useParams();
   const rootStore = props.rootStore;
   const eventStore = rootStore.eventStore;
-  const event = eventStore.events[eventId];
+  const userStore = rootStore.userStore;
+  let event;
+  // eslint-disable-next-line
+  if (userStore.member && userStore.member.event.id == eventId) {
+    event = userStore.member.event;
+  } else if (eventStore.events[eventId]) {
+    event = eventStore.events[eventId];
+  } else {
+    return <center>Unauthorized</center>;
+  }
 
-  const wss= rootStore.webSocketService;
+  const wss = rootStore.webSocketService;
   wss.init(`events/${event.id}`);
-  // webSocketService.send({
-  //   url: "events",
-  //   verb: "GET"
-  // });
-
   return (
     <Route
       render={props => (

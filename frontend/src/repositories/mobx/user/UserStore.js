@@ -3,8 +3,10 @@ import client from "../../client";
 
 export class UserStore {
   anonymousUser;
+  member;
   user;
   pending = true;
+  joining = false;
   signinError;
   signupErrors = {
     password: "",
@@ -118,30 +120,96 @@ export class UserStore {
   }
 
   anonymousAuth() {
+    // Use ajwt on device to get the corresponding anonymousUser
     client.api
-    .url("/anonymous-users/auth")
-    .get()
-    .json(({ anonymousUser }) => {
-      //this.pending = false;
-      this.anonymousUser = anonymousUser;
-      this.pending = false;
-    })
-    .catch(error => {
-      console.log(error)
-      this.pending = false;
-    });
+      .url("/anonymous-users/auth")
+      .get()
+      .json(({ anonymousUser }) => {
+        //this.pending = false;
+        this.anonymousUser = anonymousUser;
+        this.pending = false;
+      })
+      .catch(error => {
+        console.log(error);
+        this.pending = false;
+      });
+  }
+
+  async joinAsAnonymousMember(accessCode, cb) {
+    try {
+      // At the start we should have already use the stored ajwt
+      // ... if any to get the corresponding Anonymous User (AU)
+      if (!this.anonymousUser) {
+        // If there is still none, create one
+        const json = await client.api
+          .url("/anonymous-users")
+          .post({})
+          .json();
+        this.anonymousUser = json.anonymousUser;
+      }
+      // Now we can add the AU as a member of the event
+      // ... assuming the code is good
+      // This endpoint must not create a member (same AU for same Event) twice
+      const jsonMember = await client.api
+        .url("/members")
+        .post({ accessCode: accessCode })
+        .json();
+      this.member = jsonMember.member;
+      this.joining = false;
+      cb.onSuccess();
+    } catch (e) {
+      console.log("Bad code or 500");
+      cb.onError();
+      this.joining = false;
+    }
+  }
+
+  async join(accessCode, cb) {
+    this.joining = true;
+    //First of all we try to join as a staff member (role == 1)
+    if (this.isLoggedIn) {
+      client.api
+        .url("/members/auth-staff")
+        .query({ accessCode: accessCode })
+        .get()
+        .unauthorized(_ => {
+          //In case we are not allowed we join as an Anonymous Member
+          // role == 2
+          return this.joinAsAnonymousMember(accessCode, cb);
+        })
+        .json(({ member }) => {
+          this.member = member;
+          this.joining = false;
+          console.log(this.member)
+          cb.onSuccess();
+        })
+        .catch(e => {
+          console.log("not staff");
+          this.joining = false;
+          cb.onError();
+        });
+    } else {
+      //If the user is not logged In we can directly join
+      // as an Anonymous Member
+      this.joinAsAnonymousMember(accessCode, cb);
+    }
   }
 }
 
 decorate(UserStore, {
   user: observable,
+  member: observable,
   pending: observable,
   isLoggedIn: computed,
   isPending: computed,
+  joining: observable,
   signinError: observable,
   signupErrors: observable,
   signin: action,
   signup: action,
   logout: action,
-  validateCookie: action
+  join: action,
+  joinAsAnonymousMember: action,
+  validateCookie: action,
+  anonymousAuth: action
 });

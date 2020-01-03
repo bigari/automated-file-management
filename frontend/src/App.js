@@ -21,8 +21,7 @@ import {
 
 const theme = createMuiTheme({
   palette: {
-    primary: deepPurple,
-    
+    primary: deepPurple
   }
 });
 
@@ -30,7 +29,7 @@ const userStore = rootStore.userStore;
 
 const PrivateRoute = observer(({ children, ...rest }) => {
   const render = ({ location }) => {
-    if (userStore.isLoggedIn) {
+    if (userStore.isLoggedIn || /\/events\/\d+/.test(location.pathname)) {
       return children;
     } else {
       return (
