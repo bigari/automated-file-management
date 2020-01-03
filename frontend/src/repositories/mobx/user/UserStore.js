@@ -166,7 +166,7 @@ export class UserStore {
 
   async join(accessCode, cb) {
     this.joining = true;
-    //First of all we try to join as a staff member (role == 1)
+    //First of all we try to join as a staff member (role <= 1)
     if (this.isLoggedIn) {
       client.api
         .url("/members/auth-staff")
