@@ -27,8 +27,8 @@ const anonymousTokenExtractor = function(req) {
     if (req.cookies) {
       token = req.cookies["ajwt"];
     }
-    if (!token && req.headers && req.headers.authorization) {
-      token = req.headers.authorization.split(" ")[1];
+    if (!token && req.headers && req.headers.ajwt) {
+      token = req.headers.ajwt.split(" ")[1];
     }
   }
 
@@ -72,7 +72,7 @@ passport.use(
         if (!anonymousUser) {
           return done(null, false);
         }
-        done(null, anonymousUser);
+        done(null, { extras: { anonymousUser: anonymousUser } });
       } catch (error) {
         done(error, false);
       }
@@ -106,7 +106,7 @@ passport.use(
         if (!member) {
           return done(null, false);
         }
-        done(null, member);
+        done(null, { extras: { member: member } });
       } catch (error) {
         done(error, false);
       }
@@ -140,7 +140,7 @@ passport.use(
         if (!member) {
           return done(null, false);
         }
-        done(null, member);
+        done(null, { extras: { member: member } });
       } catch (error) {
         done(error, false);
       }
@@ -174,7 +174,7 @@ passport.use(
         if (!member || member.role != 0) {
           return done(null, false);
         }
-        done(null, member);
+        done(null, { extras: { member: member } });
       } catch (error) {
         done(error, false);
       }
