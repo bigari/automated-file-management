@@ -11,6 +11,8 @@ const bcrypt = require("bcrypt");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     console.log("deleting");
+    await queryInterface.bulkDelete("Questions", null, {});
+    await queryInterface.bulkDelete("Members", null, {});
     await queryInterface.bulkDelete("Events", null, {});
     await queryInterface.bulkDelete("Users", null, {});
 
@@ -21,18 +23,30 @@ module.exports = {
       "Users",
       [
         {
+          id: 0, //For some reasons i have no choice but separate
+          username: "anonymous",
+          email: "anonymous@interconf.com",
+          password: bcrypt.hashSync("010509", salt),
+          createdAt: new Date()
+        }, 
+      ],
+      {}
+    );
+    await queryInterface.bulkInsert(
+      "Users",
+      [
+        {
           username: "bigari",
           email: "bigari7+afm1@gmail.com",
           password: bcrypt.hashSync("000000", salt),
           createdAt: new Date()
         },
-        // ,
         // {
         //   username: "steeve",
         //   email: "bigari7+afm2@gmail.com",
         //   password: bcrypt.hashSync("000000", salt),
         //   createdAt: new Date()
-        // },
+        // }
         // {
         //   username: "yerima",
         //   email: "bigari7+afm3@gmail.com",
@@ -40,14 +54,15 @@ module.exports = {
         //   createdAt: new Date()
         // },
         {
-          username: "test",
-          email: "test@gmail.com",
-          password: bcrypt.hashSync("test", salt),
+          username: "Saul",
+          email: "saul@gmail.com",
+          password: bcrypt.hashSync("000000", salt),
           createdAt: new Date()
         }
       ],
       {}
     );
+
 
     console.log("querying users");
 
@@ -62,14 +77,14 @@ module.exports = {
       [
         {
           name: "The future of AI",
-          ownerId: users[0],
+          ownerId: users[1].id,
           accessCode: "00001G",
           startAt: now,
           endAt: new Date(new Date().setMonth(now.getMonth() + 1))
         },
         {
           name: "Robotic & design",
-          ownerId: users[0],
+          ownerId: users[1].id,
           accessCode: "00007Q",
           startAt: new Date(new Date().setMonth(now.getMonth() - 1)),
           endAt: now
@@ -77,54 +92,56 @@ module.exports = {
       ],
       {}
     );
+    console.log("Seeding members (owners)");
 
-    console.log("Seeding questions")
-    
     const eids = await Event.findAll({
-      attributes: ['id']  
-    }).map(event => event.dataValues.id);
+      attributes: ["id"]
+    });
 
     await queryInterface.bulkInsert(
-      "Questions",
+      "Members",
       [
         {
-          content: "This is a question",
-          timestamp: now,
-          eid: eids[0]
+          eventId: eids[0].id,
+          userId: users[1].id,
+          auid: 0,
+          role: 0,
+          createdAt: new Date(),
+          updatedAt: new Date()
         },
         {
-          content: "This is also a question",
-          timestamp: now,
-          eid: eids[0]
+          eventId: eids[0].id,
+          userId: users[1].id,
+          auid: 0,
+          role: 0,
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
-      ]
+      ],
+      {}
     );
 
-    console.log("Seeding replies")
+    console.log("Seeding questions");
 
-    const qids = await Question.findAll({
-      attributes: ['id']
-    }).map(question => question.dataValues.id);
 
-    await queryInterface.bulkInsert(
-      "Replies",
-      [
-        {
-          content: "This is a reply for question 2",
-          timestamp: new Date(),
-          qid: qids[0]
-        },
-        {
-          content: "This is a reply for question 1",
-          timestamp: new Date(),
-          qid: qids[1]
-        } 
-      ]
-    )
+    await queryInterface.bulkInsert("Questions", [
+      {
+        content: "This is a question",
+        timestamp: now,
+        eid: eids[0].id,
+        reply: "This is a reply"
+      },
+      {
+        content: "This is also a question",
+        timestamp: now,
+        eid: eids[0].id,
+        reply: "This is a reply"
+      }
+    ]);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("Replies", null, {});
+    await queryInterface.bulkDelete("Members", null, {});
     await queryInterface.bulkDelete("Questions", null, {});
     await queryInterface.bulkDelete("Events", null, {});
     return queryInterface.bulkDelete("Users", null, {});

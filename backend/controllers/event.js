@@ -1,4 +1,9 @@
-const { Event, Member, User, Sequelize } = require("../database/models/index");
+const {
+  Event,
+  Member,
+  Sequelize,
+  sequelize
+} = require("../database/models/index");
 
 const BLOCK_SIZE = 100;
 const MAX_CODE_NUM = parseInt("ZZZZZZ", 36) + 1;
@@ -72,7 +77,8 @@ module.exports = {
       const member = await Member.create({
         eventId: eid,
         role: role,
-        userId: user.id
+        userId: user.id,
+        auid: 0
       })
 
       res.status(200)
@@ -85,8 +91,7 @@ module.exports = {
         .set("Content-Type", "application/json")
         .send({ error: e.message });
     }
-
-  },  
+  },
 
   getUser: async function(username) {
     const user = await User.findOne({
@@ -107,14 +112,30 @@ module.exports = {
         where: { endAt: { [Sequelize.Op.lt]: new Date().toISOString() } }
       });
       console.log(currentMaxCode);
-      const nextAccessCode = nextCode(currentMaxCode)
+      const nextAccessCode = nextCode(currentMaxCode);
       console.log(nextAccessCode);
-      const event = await Event.create({
-        name: name,
-        ownerId: req.user.id,
-        accessCode: nextAccessCode,
-        startAt: startAt,
-        endAt: endAt
+
+      const event = await sequelize.transaction(async t => {
+        const _event = await Event.create(
+          {
+            name: name,
+            ownerId: req.user.id,
+            accessCode: nextAccessCode,
+            startAt: startAt,
+            endAt: endAt
+          },
+          { transaction: t }
+        );
+        await Member.create(
+          {
+            eventId: _event.id,
+            userId: req.user.id,
+            role: 0,
+            auid: 0
+          },
+          { transaction: t }
+        );
+        return _event;
       });
       res
         .status(200)
