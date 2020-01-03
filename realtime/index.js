@@ -22,6 +22,7 @@ wss.on("connection", (ws, req) => {
     const responseQueue = [];
     for (const messageJson of messageWrapper.queue) {
       messageJson.jwt = messageWrapper.jwt;
+      messageJson.ajwt = messageWrapper.ajwt;
       const res = await sendHttp(messageJson);
       responseQueue.push({
         url: messageJson.url,
@@ -32,9 +33,9 @@ wss.on("connection", (ws, req) => {
     if (responseQueue.length > 0) {
       const bcast = messageWrapper.bcast;
       // if (bcast === undefined || bcast) {
-        cm.broadcast(channel, responseQueue);
+      cm.broadcast(channel, responseQueue);
       // } else {
-        // ws.send(JSON.stringify(responseQueue));
+      // ws.send(JSON.stringify(responseQueue));
       // }
     }
   });
@@ -45,5 +46,3 @@ wss.on("connection", (ws, req) => {
     // console.log(cm.channels);
   });
 });
-
-
