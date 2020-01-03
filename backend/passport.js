@@ -134,7 +134,9 @@ passport.use(
         if (!eid) {
           return done(null, false);
         }
-        const member = await Member.findOne({ where: { userId: payload.sub } });
+        const member = await Member.findOne({
+          where: { eventId: eid, userId: payload.sub }
+        });
         if (!member) {
           return done(null, false);
         }
@@ -145,7 +147,6 @@ passport.use(
     }
   )
 );
-
 
 passport.use(
   "jwt-member-owner",
@@ -167,7 +168,9 @@ passport.use(
         if (!eid) {
           return done(null, false);
         }
-        const member = await Member.findOne({ where: { userId: payload.sub } });
+        const member = await Member.findOne({
+          where: { eventId: eid, userId: payload.sub }
+        });
         if (!member || member.role != 0) {
           return done(null, false);
         }
