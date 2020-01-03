@@ -21,6 +21,7 @@ export class MemberStore {
     })
     .catch(e => {
         this.error = JSON.parse(e.message).error
+        console.log(this.error)
     });
   }
 
@@ -35,10 +36,16 @@ export class MemberStore {
         console.error(e.error);
     });  
   }
+
+  setError(error) {
+    this.error = error
+  }
 }
 
 decorate(MemberStore, {
   members: observable,
+  error: observable,
   fetchMembers: action,
-  addMember: action
+  addMember: action,
+  setError: action
 });

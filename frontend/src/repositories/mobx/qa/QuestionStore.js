@@ -2,7 +2,8 @@ import { observable, action, decorate } from "mobx";
 import client from "../../client";
 
 export class QuestionStore {
-  qas = []
+  qas = [];
+  eid;
   
   constructor(root) {
     this.root = root;
@@ -29,7 +30,7 @@ export class QuestionStore {
     const message = {
       verb: "DELETE",
       url: `questions/${qid}`,
-      data: {}
+      data: {eid: this.eid}
     }
     this.wss.send(message)
   }
@@ -38,9 +39,10 @@ export class QuestionStore {
    * @param {int} qid 
    */
   deleteQuestionFromLocal(qid) {
+    console.log("het")
     let i = 0
     for(const question of this.qas) {                               
-      if(question.id === qid) {                                                                  
+      if(question.id == qid) { 
         this.qas.splice(i, 1)
         return
       }
@@ -64,7 +66,8 @@ export class QuestionStore {
       verb: 'POST',
       url: `questions/${qid}/reply`,
       data: {
-        content: reply.trim()
+        content: reply.trim(),
+        eid: this.eid
       }
     }
     this.wss.send(message)  

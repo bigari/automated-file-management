@@ -1,6 +1,7 @@
 const {
   Event,
   Member,
+  User,
   Sequelize,
   sequelize
 } = require("../database/models/index");
@@ -28,29 +29,7 @@ const nextCode = accessCode => {
 };
 
 module.exports = {
-  checkOwnership: async function (req, res, next) {
-    try{
-      const userId = req.user.id
-      const eventId = req.params.eid
-  
-      const event = await Event.findOne({
-          where: {
-              ownerId: userId,
-              id: eventId
-          }
-      });
-
-      if(event) next()
-      else throw new Error("Unauthorized action.")
-    }
-    catch(e) {
-      res
-      .status(401)
-      .set("Content-Type", "application/json")
-      .send({ error: e.message });
-    }
-  },
-
+  // TODO: add events that the use is apart of 
   list: async function(req, res) {
     try {
       const events = await Event.findAll({
@@ -83,9 +62,10 @@ module.exports = {
 
       res.status(200)
         .set("Content-Type", "application/json")
-        .send({member: user, addedAt: new Date()});
+        .send({member: user});
     
     } catch (e) {
+      console.log(e.message)
       res
         .status(500)
         .set("Content-Type", "application/json")

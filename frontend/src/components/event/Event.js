@@ -22,7 +22,7 @@ const Event = observer(props => {
   const event = eventStore.events[eventId];
 
   const wss= rootStore.webSocketService;
-  wss.init(`events/${event.id}`);
+  wss.init(`events/${eventId}`);
   // webSocketService.send({
   //   url: "events",
   //   verb: "GET"
@@ -46,6 +46,7 @@ const Event = observer(props => {
               switch (selected) {
                 case "qas":
                   rootStore.questionStore.fetchQuestions(eventId);
+                  rootStore.questionStore.eid = eventId;
                   break;
                 case "polls":
                   break;

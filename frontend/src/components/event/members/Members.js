@@ -37,13 +37,14 @@ export default observer((props) => {
   const [open, setOpen] = React.useState(false);
   const [username, setUsername] = React.useState('');
   const store = props.rootStore.memberStore;
-  const [error, setError] = React.useState('')
 
   const openModal = function() {
     setOpen(true);
   };
   const closeModal = function() {
     setOpen(false);
+    setUsername('');
+    store.setError('');
   };
 
   const addMember = function() {
@@ -68,7 +69,6 @@ export default observer((props) => {
                 <div key={member.id} className={classes.member}>
                   <div>{member.email}</div>
                   <div>{member.username}</div>
-                  <div>{new Date(member.createdAt).toLocaleString()}</div>
                 </div>
               );
             })

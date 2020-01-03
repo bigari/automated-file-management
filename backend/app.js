@@ -91,7 +91,7 @@ app.post(
 
 app.get(
   "/events/:eid/members",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt-member-staff", { session: false }),
   eventController.fetchMembers.bind(eventController)
 );
 
