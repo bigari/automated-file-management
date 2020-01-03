@@ -96,11 +96,18 @@ app.post(
   eventController.addMember.bind(eventController)
 );
 
+app.get(
+  "/members/auth-staff",
+  passport.authenticate("jwt-user", { session: false }),
+  memberController.authStaff.bind(memberController)
+);
+
 app.post(
   "/members",
   passport.authenticate("jwt-anonymous-user", { session: false }),
   memberController.createAnonymousMember.bind(memberController)
 );
+
 
 app.post(
   "/anonymous-users",

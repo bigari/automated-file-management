@@ -103,7 +103,7 @@ module.exports = {
     try {
       // persist in database
       const currentMaxCode = await Event.max("accessCode", {
-        where: { endAt: { [Sequelize.Op.lt]: new Date().toISOString() } }
+        where: { endAt: { [Sequelize.Op.gt]: new Date().toISOString() } }
       });
       console.log(currentMaxCode);
       const nextAccessCode = nextCode(currentMaxCode);
