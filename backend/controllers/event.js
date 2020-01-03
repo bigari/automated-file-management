@@ -1,6 +1,7 @@
 const {
   Event,
   Member,
+  User,
   Sequelize,
   sequelize
 } = require("../database/models/index");
@@ -28,24 +29,7 @@ const nextCode = accessCode => {
 };
 
 module.exports = {
-  //List all events current user is part of
-  checkOwnership: async function(userId, eventId) {
-    if (!userId) {
-      return false;
-    }
-    const event = await Event.findOne({
-      where: {
-        ownerId: userId,
-        id: eventId
-      }
-    });
-
-    if (event) {
-      return true;
-    }
-    return false;
-  },
-
+  // TODO: add events that the use is apart of 
   list: async function(req, res) {
     try {
       const events = await Event.findAll({
@@ -64,36 +48,38 @@ module.exports = {
   },
 
   addMember: async function(req, res) {
-    const userId = req.user.id;
-    const role = 1;
-    const eid = req.params.eid;
+    const role = 1
+    const eid = req.params.eid
+    const username = req.body.username
     try {
-      //Is now irrelevant I guess, since passport handles that
-      const isOwner = await this.checkOwnership(userId, eid);
-      if (!isOwner) {
-        res
-          .status(401)
-          .set("Content-Type", "application/json")
-          .send({ errors: { message: "Sorry, you do not own this event." } });
-        return;
-      }
+      const user = await this.getUser(username)
       const member = await Member.create({
         eventId: eid,
         role: role,
-        userId: userId,
-        auid: 0 //Would fail otherwise because of constraints
-      });
-      res
-        .status(200)
+        userId: user.id,
+        auid: 0
+      })
+
+      res.status(200)
         .set("Content-Type", "application/json")
-        .send({ member: { ...member.dataValues } });
+        .send({member: user});
+    
     } catch (e) {
-      console.log(e);
+      console.log(e.message)
       res
         .status(500)
         .set("Content-Type", "application/json")
-        .send({ error: "An error has occurred, please try again later." });
+        .send({ error: e.message });
     }
+  },
+
+  getUser: async function(username) {
+    const user = await User.findOne({
+      where: {username: username}
+    })
+
+    if(user) return user
+    throw new Error("Invalid username")
   },
 
   create: async function(req, res) {
@@ -138,6 +124,43 @@ module.exports = {
     } catch (error) {
       console.error(error);
       res.end();
+    }
+  },
+
+  fetchMembers: async function(req, res) {
+    try{
+      const eid = req.params.eid
+      let members = await Member.findAll({
+        where: {
+          eventId: eid,
+          [Sequelize.Op.not]: {
+            role: 2
+          }
+        },
+        include: [
+          {model: User, as: 'user', attributes: ["id", "username", "email"]}
+        ],
+      })
+
+      members = members.map(member => {
+        let mem = member.user
+        mem.createdAt = member.createdAt
+
+        return mem
+      })
+
+      res
+      .status(200)
+      .set("Content-Type", "application/json")
+      .send({
+        members: members
+      })
+    }
+    catch(e) {
+      res
+      .status(500)
+      .set("Content-Type", "application/json")
+      .send({error: e.message})
     }
   }
 };

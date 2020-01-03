@@ -97,12 +97,16 @@ passport.use(
           req.params.eventId ||
           req.body.eid ||
           req.body.eventId;
+
+          console.log(eid)
         if (!eid) {
           return done(null, false);
         }
         const member = await Member.findOne({
           where: { auid: payload.sub, eventId: eid }
         });
+
+        console.log(member.dataValues)
         if (!member) {
           return done(null, false);
         }

@@ -2,6 +2,16 @@ const { Question, Reply } = require("../database/models/index");
 
 module.exports = {
 
+    validateQuestion(question) {
+        if(question.content === undefined || question.content.length === 0) throw new Error("A question can't be empty.")
+        else if(question.content.length > 100) throw new Error(`The question is too long (${question.content.length} characters), 100 characters max.`)
+    },
+    
+    validateReply(reply) {
+        if(reply.content === undefined || reply.content.length === 0) throw new Error("A reply can't be empty.")
+        else if(reply.content.length > 100) throw new Error(`The reply is too long (${reply.content.length} characters), 100 characters max.`)
+    },
+
     fetchQuestions: async (req, res) => {
         try{
             const questions = await Question.findAll({
@@ -30,12 +40,15 @@ module.exports = {
         }
     },
 
-    reply: async (req, res) => {
+    reply: async function(req, res) {
         try {
+            let reply = req.body
+            this.validateReply(reply)
+
             const qid = req.params.qid
-            let reply = req.body.reply
+            let content = req.body.content
             reply = await Reply.create({
-                content: reply,
+                content: content,
                 timestamp: new Date(),
                 qid: qid
             })
@@ -77,9 +90,11 @@ module.exports = {
         }
     },
 
-    createQuestion: async (req, res) => {
+    createQuestion: async function(req, res) {
         try {
             let question = req.body
+            this.validateQuestion(question)
+
             question = await Question.create({
                 content: question.content,
                 timestamp: new Date(),
@@ -98,6 +113,5 @@ module.exports = {
             .set("Content-Type", "application/json")
             .send({error: e.message})
         }
-    }
-        
+    }  
 }

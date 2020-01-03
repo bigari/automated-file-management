@@ -4,6 +4,7 @@ const models = require("../models");
 const User = models.User;
 const Event = models.Event;
 const Question = models.Question;
+const Reply = models.Reply;
 
 const bcrypt = require("bcrypt");
 
@@ -67,7 +68,7 @@ module.exports = {
 
     const users = await User.findAll({
       attributes: ["id"]
-    });
+    }).map(user => user.dataValues);
 
     console.log("seeding events");
     const now = new Date();
@@ -95,7 +96,7 @@ module.exports = {
 
     const eids = await Event.findAll({
       attributes: ["id"]
-    });
+    }).map(user => user.dataValues);
 
     await queryInterface.bulkInsert(
       "Members",
@@ -109,7 +110,7 @@ module.exports = {
           updatedAt: new Date()
         },
         {
-          eventId: eids[0].id,
+          eventId: eids[1].id,
           userId: users[1].id,
           auid: 0,
           role: 0,
@@ -127,14 +128,12 @@ module.exports = {
       {
         content: "This is a question",
         timestamp: now,
-        eid: eids[0].id,
-        reply: "This is a reply"
+        eid: eids[0].id
       },
       {
         content: "This is also a question",
         timestamp: now,
-        eid: eids[0].id,
-        reply: "This is a reply"
+        eid: eids[0].id
       }
     ]);
   },

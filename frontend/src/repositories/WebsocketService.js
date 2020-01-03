@@ -92,9 +92,12 @@ export default class WebsocketService {
         id: {
           qas: {
             POST: () => {
-              const question = message.data.question;
-              if (question) {
-                this.root.questionStore.addQuestionToLocal(question);
+              const error = message.data.error
+              if(!error) {
+                this.root.questionStore.addQuestionToLocal(message.data.question)
+              }
+              else {
+                console.error(error)
               }
             },
             PUT: () => {}
@@ -112,17 +115,24 @@ export default class WebsocketService {
       },
       questions: {
         DELETE: () => {
-          const qid = message.data.qid;
-          if (qid) {
-            this.root.questionStore.deleteQuestionFromLocal(qid);
+          const qid = message.data.qid
+          const error = message.data.error
+          if(!error) {
+            this.root.questionStore.deleteQuestionFromLocal(qid)
+          }
+          else {
+            console.error(error)
           }
         },
         id: {
           reply: {
             POST: () => {
-              const qid = message.data.qid;
-              if (qid) {
-                this.root.questionStore.addReplyToLocal(message.data);
+              const error = message.data.error
+              if(!error) {
+                this.root.questionStore.addReplyToLocal(message.data)
+              }
+              else {
+                console.error(error)
               }
             }
           }

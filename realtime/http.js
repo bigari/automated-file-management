@@ -1,4 +1,4 @@
-const superagent = require("superagent");
+ const superagent = require("superagent");
 const sendHttp = async message => {
   let req;
   let res;
@@ -17,20 +17,21 @@ const sendHttp = async message => {
   }
   if (message.verb === "PUT") {
     req = superagent.put(url);
-  } else if (message.verb === "DELETE") {
+  }
+  else if(message.verb === "DELETE") {
     req = superagent.del(url);
   } else {
     req = superagent.post(url);
   }
-  try {
+  // try {
     res = await req
       .set("Accept", "application/json")
       .set("Authorization", `Bearer ${message.jwt}`)
       .set("ajwt", `Bearer ${message.ajwt}`)
       .send(message.data);
     return res.body;
-  } catch {
-    return null;
-  }
+  // } catch {
+  //   return null;
+  // }
 };
 module.exports = sendHttp;

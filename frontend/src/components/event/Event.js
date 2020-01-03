@@ -13,6 +13,7 @@ import SideNav, { NavItem, NavIcon, NavText } from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import QAs from "./qas/QAs";
 import Info from "./info/Info";
+import Members from "./members/Members";
 
 const Event = observer(props => {
   const { eventId } = useParams();
@@ -29,8 +30,13 @@ const Event = observer(props => {
     return <center>Unauthorized</center>;
   }
 
-  const wss = rootStore.webSocketService;
-  wss.init(`events/${event.id}`);
+  const wss= rootStore.webSocketService;
+  wss.init(`events/${eventId}`);
+  // webSocketService.send({
+  //   url: "events",
+  //   verb: "GET"
+  // });
+
   return (
     <Route
       render={props => (
@@ -49,10 +55,13 @@ const Event = observer(props => {
               switch (selected) {
                 case "qas":
                   rootStore.questionStore.fetchQuestions(eventId);
+                  rootStore.questionStore.eid = eventId;
                   break;
                 case "polls":
                   break;
                 case "members":
+                  rootStore.memberStore.fetchMembers(eventId);
+                  rootStore.memberStore.eid = eventId;
                   break;
                 default:
                   break;
@@ -108,7 +117,7 @@ const Event = observer(props => {
             />
             <Route
               path={`/events/${eventId}/members`}
-              component={props => <div>Members</div>}
+              component={props => <Members rootStore={rootStore}/>}
             />
           </main>
         </React.Fragment>

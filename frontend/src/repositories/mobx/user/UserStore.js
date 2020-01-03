@@ -110,12 +110,12 @@ export class UserStore {
       .url("/validateCookie")
       .get()
       .json(({ user }) => {
-        //this.pending = false;
+        this.pending = false;
         this.user = user;
-        this.anonymousAuth();
+        // this.anonymousAuth();
       })
       .catch(error => {
-        this.anonymousAuth();
+        // this.anonymousAuth();
       });
   }
 
