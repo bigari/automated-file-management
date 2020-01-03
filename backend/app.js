@@ -83,10 +83,16 @@ app.post("/events/:eid/qas",
   questionController.createQuestion.bind(questionController)
 );
 
-//When user invite contributor
+app.get(
+  "/events/:eid/members",
+  // passport.authenticate("jwt", { session: false }),
+  eventController.fetchMembers.bind(eventController)
+);
+
 app.post(
   "/events/:eid/members",
   passport.authenticate("jwt", { session: false }),
+  eventController.checkOwnership,
   eventController.addMember.bind(eventController)
 );
 

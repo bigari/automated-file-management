@@ -1,4 +1,4 @@
-const { Event, Member, Sequelize } = require("../database/models/index");
+const { Event, Member, User, Sequelize } = require("../database/models/index");
 
 const BLOCK_SIZE = 100;
 const MAX_CODE_NUM = parseInt("ZZZZZZ", 36) + 1;
@@ -23,22 +23,27 @@ const nextCode = accessCode => {
 };
 
 module.exports = {
-  //List all events current user is part of
-  checkOwnership: async function (userId, eventId) {
-    if (!userId) {
-        return false;
+  checkOwnership: async function (req, res, next) {
+    try{
+      const userId = req.user.id
+      const eventId = req.params.eid
+  
+      const event = await Event.findOne({
+          where: {
+              ownerId: userId,
+              id: eventId
+          }
+      });
+
+      if(event) next()
+      else throw new Error("Unauthorized action.")
     }
-    const event = await Event.findOne({
-        where: {
-            ownerId: userId,
-            id: eventId
-        }
-    });
-    
-    if (event) {
-        return true
+    catch(e) {
+      res
+      .status(401)
+      .set("Content-Type", "application/json")
+      .send({ error: e.message });
     }
-    return false
   },
 
   list: async function(req, res) {
@@ -58,36 +63,39 @@ module.exports = {
     }
   },
 
-  addMember: async function (req, res) {
-    const userId = req.user.id
+  addMember: async function(req, res) {
     const role = 1
-    const eid = req.params.eid;
+    const eid = req.params.eid
+    const username = req.body.username
     try {
-      const isOwner = await this.checkOwnership(userId, eid)
-      if (!isOwner) {
-       res.status(401)
-        .set("Content-Type", "application/json")
-        .send({ errors: {message: "Sorry, you do not own this event."} });
-        return;
-      }
+      const user = await this.getUser(username)
       const member = await Member.create({
         eventId: eid,
         role: role,
-        userId: userId
+        userId: user.id
       })
+
       res.status(200)
         .set("Content-Type", "application/json")
-        .send({member: {...member.dataValues}});
+        .send({member: user, addedAt: new Date()});
     
     } catch (e) {
-      console.log(e)
       res
         .status(500)
         .set("Content-Type", "application/json")
-        .send({ error: "An error has occurred, please try again later." });
+        .send({ error: e.message });
     }
 
   },  
+
+  getUser: async function(username) {
+    const user = await User.findOne({
+      where: {username: username}
+    })
+
+    if(user) return user
+    throw new Error("Invalid username")
+  },
 
   create: async function(req, res) {
     const name = req.body.name;
@@ -115,6 +123,43 @@ module.exports = {
     } catch (error) {
       console.error(error);
       res.end();
+    }
+  },
+
+  fetchMembers: async function(req, res) {
+    try{
+      const eid = req.params.eid
+      let members = await Member.findAll({
+        where: {
+          eventId: eid,
+          [Sequelize.Op.not]: {
+            role: 2
+          }
+        },
+        include: [
+          {model: User, as: 'user', attributes: ["id", "username", "email"]}
+        ],
+      })
+
+      members = members.map(member => {
+        let mem = member.user
+        mem.createdAt = member.createdAt
+
+        return mem
+      })
+
+      res
+      .status(200)
+      .set("Content-Type", "application/json")
+      .send({
+        members: members
+      })
+    }
+    catch(e) {
+      res
+      .status(500)
+      .set("Content-Type", "application/json")
+      .send({error: e.message})
     }
   }
 };

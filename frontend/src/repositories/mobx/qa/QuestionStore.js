@@ -74,11 +74,7 @@ export class QuestionStore {
     // eslint-disable-next-line
     let i = 0
     for(const question of this.qas) {                               
-<<<<<<< HEAD
       if(question.id == message.qid) {
-=======
-      if(question.id === message.qid) {                                                                  
->>>>>>> 2eed2c457597a180b236ea7d5ef8dd501f2b3428
         question.replies.push(message.reply)
         return
       }
