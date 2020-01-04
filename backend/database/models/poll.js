@@ -1,8 +1,13 @@
-'use strict';
+"use strict";
 module.exports = (sequelize, DataTypes) => {
-  const Poll = sequelize.define('Poll', {
-    title: DataTypes.STRING
-  }, {});
+  const Poll = sequelize.define(
+    "Poll",
+    {
+      title: DataTypes.STRING,
+      eventId: DataTypes.INTEGER
+    },
+    {}
+  );
   Poll.associate = function(models) {
     // associations can be defined here
     Poll.belongsTo(models.Event, { foreignKey: "eventId", as: "event" });
@@ -10,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "pollId",
       as: "options"
     });
-
   };
   return Poll;
 };

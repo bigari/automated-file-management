@@ -11,9 +11,11 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
+      //Deleted
       voteCount: {
         type: Sequelize.INTEGER
       },
+      //Add pollId
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

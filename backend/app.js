@@ -7,6 +7,7 @@ const { check } = require("express-validator");
 const cookieParser = require("cookie-parser");
 const passport = require("./passport");
 const questionController = require("./controllers/question");
+const pollController = require("./controllers/poll");
 const memberController = require("./controllers/member");
 const anonymousUserController = require("./controllers/anonymous_user");
 
@@ -90,6 +91,46 @@ app.post(
 );
 
 app.get(
+  "/events/:eid/polls",
+  passport.authenticate(["jwt-member-anonymous", "jwt-member-staff"], {
+    session: false
+  }),
+  pollController.fetchPolls.bind(pollController)
+);
+
+app.post(
+  "/events/:eid/polls",
+  passport.authenticate("jwt-member-staff", {
+    session: false
+  }),
+  pollController.createPoll.bind(pollController)
+);
+
+app.put(
+  "/events/:eid/polls/:pollId",
+  passport.authenticate("jwt-member-staff", {
+    session: false
+  }),
+  pollController.updatePoll.bind(pollController)
+);
+
+app.delete(
+  "/events/:eid/polls/:pollId",
+  passport.authenticate("jwt-member-staff", {
+    session: false
+  }),
+  pollController.deletePoll.bind(pollController)
+);
+
+app.post(
+  "/events/:eid/polls/:pollId/vote",
+  passport.authenticate(["jwt-member-anonymous", "jwt-member-staff"], {
+    session: false
+  }),
+  pollController.vote.bind(pollController)
+);
+
+app.get(
   "/events/:eid/members",
   passport.authenticate("jwt-member-staff", { session: false }),
   eventController.fetchMembers.bind(eventController)
@@ -112,7 +153,6 @@ app.post(
   passport.authenticate("jwt-anonymous-user", { session: false }),
   memberController.createAnonymousMember.bind(memberController)
 );
-
 
 app.post(
   "/anonymous-users",
