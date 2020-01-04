@@ -29,14 +29,19 @@ const nextCode = accessCode => {
 };
 
 module.exports = {
-  // TODO: add events that the use is apart of 
   list: async function(req, res) {
     try {
       const events = await Event.findAll({
-        where: {
-          ownerId: req.user.id
-        }
-      });
+        include: [{
+          attributes: [],
+          model: Member,
+          as: "members",
+          where: [{
+            userId: req.user.id
+          }]
+        }]
+      })
+
       res
         .status(200)
         .set("Content-Type", "application/json")
@@ -47,6 +52,7 @@ module.exports = {
     }
   },
 
+  // avoid adding member two times, userId eventID prim key
   addMember: async function(req, res) {
     const role = 1
     const eid = req.params.eid
@@ -131,6 +137,7 @@ module.exports = {
     try{
       const eid = req.params.eid
       let members = await Member.findAll({
+        attributes: ["role"],
         where: {
           eventId: eid,
           [Sequelize.Op.not]: {
@@ -139,13 +146,12 @@ module.exports = {
         },
         include: [
           {model: User, as: 'user', attributes: ["id", "username", "email"]}
-        ],
+        ]
       })
 
       members = members.map(member => {
         let mem = member.user
-        mem.createdAt = member.createdAt
-
+        mem.dataValues.role = member.role
         return mem
       })
 
@@ -154,6 +160,32 @@ module.exports = {
       .set("Content-Type", "application/json")
       .send({
         members: members
+      })
+    }
+    catch(e) {
+      res
+      .status(500)
+      .set("Content-Type", "application/json")
+      .send({error: e.message})
+    }
+  },
+
+  deleteMember: async function(req, res) {
+    try{
+      const uid = req.params.uid
+      const eid = req.params.eid
+      await Member.destroy({
+        where: [{
+          userId: uid,
+          eventId: eid
+        }]
+      })
+      
+      res
+      .status(200)
+      .set("Content-Type", "application/json")
+      .send({
+        uid: uid
       })
     }
     catch(e) {

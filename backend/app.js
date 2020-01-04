@@ -18,6 +18,7 @@ app.use(function(req, res, next) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Max-Age", 86400);
   next();
@@ -125,4 +126,9 @@ app.get(
   anonymousUserController.auth.bind(anonymousUserController)
 );
 
+app.delete(
+  "/events/:eid/members/:uid",
+  passport.authenticate("jwt-member-owner", { session: false }),
+  eventController.deleteMember.bind(eventController)
+)
 module.exports = app;

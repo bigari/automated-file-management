@@ -39,7 +39,6 @@ export class QuestionStore {
    * @param {int} qid 
    */
   deleteQuestionFromLocal(qid) {
-    console.log("het")
     let i = 0
     for(const question of this.qas) {                               
       if(question.id == qid) { 
