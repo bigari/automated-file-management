@@ -51,6 +51,10 @@ export default observer((props) => {
     store.addMember(store.eid, username)
   }
 
+  const deleteMember = function(e, uid) {
+    store.deleteMember(uid)
+  }
+
   return (
     <Container maxWidth="md">
       <Box className={classes.header}>
@@ -59,6 +63,7 @@ export default observer((props) => {
         </Typography>        
         <Button variant="contained" color="primary" onClick={openModal}>
           Add a member
+
         </Button>
       </Box>
       <Paper>
@@ -69,6 +74,13 @@ export default observer((props) => {
                 <div key={member.id} className={classes.member}>
                   <div>{member.email}</div>
                   <div>{member.username}</div>
+                  {
+                    (member.role != 0) ? 
+                      (<button onClick={e => {deleteMember(e, member.id)}}>
+                       delete
+                      </button>)
+                      : (<div/>)
+                  }
                 </div>
               );
             })
@@ -96,7 +108,6 @@ export default observer((props) => {
 
             <Button variant="contained" 
             color="primary" 
-            disableElevation
             onClick={addMember}>Add</Button>
             
           </Box>

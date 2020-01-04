@@ -25,6 +25,26 @@ export class MemberStore {
     });
   }
 
+  deleteMember(uid) {
+    client.api
+    .url(`/events/${this.eid}/members/${uid}`)
+    .delete()
+    .json(res => {
+      let i = 0
+      for(const member of this.members) {                               
+        if(member.id == uid) { 
+          this.members.splice(i, 1)
+          return
+        }
+        i++
+      }
+    })
+    .catch(e => {
+        this.error = JSON.parse(e.message).error
+        console.log(this.error)
+    });
+  }
+
   fetchMembers(eid) {
     client.api
     .url(`/events/${eid}/members`)
@@ -47,5 +67,6 @@ decorate(MemberStore, {
   error: observable,
   fetchMembers: action,
   addMember: action,
+  deleteMember: action,
   setError: action
 });
