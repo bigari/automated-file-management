@@ -4,7 +4,8 @@ import client from "../../client";
 export class QuestionStore {
   qas = [];
   eid;
-  
+  hasFetched = false;
+
   constructor(root) {
     this.root = root;
     this.wss = root.webSocketService;
@@ -12,15 +13,18 @@ export class QuestionStore {
 
   // initially get data directly from database
   fetchQuestions(eid) {
-    client.api
-      .url(`/events/${eid}/qas`)
-      .get()
-      .json(res => {
-          this.qas = res.qas
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    if (!this.hasFetched) {
+      client.api
+        .url(`/events/${eid}/qas`)
+        .get()
+        .json(res => {
+          this.qas = res.qas;
+          this.hasFetched = true;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 
   /**
@@ -87,6 +91,7 @@ export class QuestionStore {
 
 decorate(QuestionStore, {
   qas: observable,
+  hasFetched: observable,
   fetchQuestions: action,
   deleteQuestionFromLocal: action,
   addQuestionToLocal: action,

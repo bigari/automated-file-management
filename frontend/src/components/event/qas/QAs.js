@@ -15,9 +15,11 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default observer((props) => {
+export default observer(props => {
   const classes = useStyles();
   const store = props.rootStore.questionStore;
+  const eid = props.eid;
+  store.fetchQuestions(eid);
 
   return (
     <Container maxWidth="md">

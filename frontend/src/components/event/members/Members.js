@@ -32,11 +32,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default observer((props) => {
+export default observer(props => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [username, setUsername] = React.useState('');
+  const [username, setUsername] = React.useState("");
   const store = props.rootStore.memberStore;
+  const eid = props.eid;
+  store.fetchMembers(eid);
 
   const openModal = function() {
     setOpen(true);

@@ -3,6 +3,7 @@ import { EventStore } from "./event/EventStore";
 import WebSocketService from "../WebsocketService";
 import { QuestionStore } from "./qa/QuestionStore";
 import { MemberStore } from "./member/MemberStore";
+import { PollStore } from "./poll/PollStore";
 
 class RootStore {
   constructor() {
@@ -11,6 +12,7 @@ class RootStore {
     this.webSocketService = new WebSocketService(this);
     this.questionStore = new QuestionStore(this);
     this.memberStore = new MemberStore(this);
+    this.pollStore = new PollStore(this);
   }
 }
 

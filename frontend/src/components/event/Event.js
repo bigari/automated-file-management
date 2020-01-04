@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react";
 import { useParams, Route } from "react-router-dom";
 
@@ -14,12 +14,17 @@ import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import QAs from "./qas/QAs";
 import Info from "./info/Info";
 import Members from "./members/Members";
+import Polls from "./polls/Polls";
 
 const Event = observer(props => {
   const { eventId } = useParams();
   const rootStore = props.rootStore;
   const eventStore = rootStore.eventStore;
   const userStore = rootStore.userStore;
+  rootStore.questionStore.eid = eventId;
+  rootStore.pollStore.eid = eventId;
+  rootStore.memberStore.eid = eventId;
+
   let event;
   // eslint-disable-next-line
   if (userStore.member && userStore.member.event.id == eventId) {
@@ -30,7 +35,7 @@ const Event = observer(props => {
     return <center>Unauthorized</center>;
   }
 
-  const wss= rootStore.webSocketService;
+  const wss = rootStore.webSocketService;
   wss.init(`events/${eventId}`);
   // wss.send({
   //   url: "events",
@@ -50,21 +55,6 @@ const Event = observer(props => {
               const to = `/events/${eventId}/` + selected;
               if (props.location.pathname !== to) {
                 props.history.push(to);
-              }
-
-              switch (selected) {
-                case "qas":
-                  rootStore.questionStore.fetchQuestions(eventId);
-                  rootStore.questionStore.eid = eventId;
-                  break;
-                case "polls":
-                  break;
-                case "members":
-                  rootStore.memberStore.fetchMembers(eventId);
-                  rootStore.memberStore.eid = eventId;
-                  break;
-                default:
-                  break;
               }
             }}
             style={{ backgroundColor: "#320b86" }}
@@ -113,11 +103,15 @@ const Event = observer(props => {
             />
             <Route
               path={`/events/${eventId}/polls`}
-              component={props => <div>Polls</div>}
+              component={props => (
+                <Polls eid={eventId} rootStore={rootStore}></Polls>
+              )}
             />
             <Route
               path={`/events/${eventId}/members`}
-              component={props => <Members rootStore={rootStore}/>}
+              component={props => (
+                <Members eid={eventId} rootStore={rootStore} />
+              )}
             />
           </main>
         </React.Fragment>

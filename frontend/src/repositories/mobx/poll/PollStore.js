@@ -4,6 +4,7 @@ import client from "../../client";
 export class PollStore {
   polls = {};
   error = "";
+  hasFetched = false;
   eid;
   constructor(root) {
     this.root = root;
@@ -15,6 +16,7 @@ export class PollStore {
   }
 
   voteInServer(eid, pollId, optionId) {
+    this.polls[pollId].choice = optionId
     this.wss.send({
       url: `/events/${eid}/polls/${pollId}/vote`,
       verb: "POST",
@@ -71,19 +73,24 @@ export class PollStore {
     }
   }
 
-  fetchPolls(eid) {
-    client.api
-      .url(`/events/${eid}/polls`)
-      .get()
-      .json(({ polls }) => {
-        this.polls = {};
-        for (const poll of polls) {
-          this.polls[poll.id] = poll;
-        }
-      })
-      .catch(e => {
-        console.error(e.error);
-      });
+  fetchPolls(eventId) {
+    if (!this.hasFetched) {
+      client.api
+        .url(`/events/${eventId}/polls`)
+        .get()
+        .json(({ polls }) => {
+          const pollsObj = {};
+          for (const poll of polls) {
+            pollsObj[poll.id] = poll;
+          }
+          this.polls = pollsObj;
+
+          this.hasFetched = true;
+        })
+        .catch(e => {
+          console.error(e.error);
+        });
+    }
   }
 
   setError(error) {
@@ -93,14 +100,12 @@ export class PollStore {
 
 decorate(PollStore, {
   list: computed,
+  hasFetched: observable,
   polls: observable,
   error: observable,
   fetchPolls: action,
-  addPollToServer: action,
   addPollToLocal: action,
-  updatePollInServer: action,
   updatePollInLocal: action,
-  deletePollFromServer: action,
   deletePollFromLocal: action,
   voteInServer: action,
   voteInLocal: action,
