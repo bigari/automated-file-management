@@ -84,65 +84,85 @@ export default class WebsocketService {
     }
   }
 
+  /**
+   * Routing elements
+   */
   routeToStore(message) {
-    let resources = message.url.split("/");
-    resources = resources.filter(res => res !== "");
+    let ids = message.url.match(/\d+/g);
+    if (ids) {
+      ids = ids.map(id => parseInt(id));
+    }
+    // With this, "/" terminated url won't work
     const ROUTES = {
-      events: {
-        id: {
-          qas: {
-            POST: () => {
-              const error = message.data.error
-              if(!error) {
-                this.root.questionStore.addQuestionToLocal(message.data.question)
-              }
-              else {
-                console.error(error)
-              }
-            },
-            PUT: () => {}
-          },
-          polls: {
-            POST: () => {},
-            PUT: () => {}
-          }
-        },
+      "/events/\\d+": {
         GET: () => {
           console.log(message.data);
+        }
+      },
+
+      "/events/\\d+/qas": {
+        POST: () => {
+          const error = message.data.error;
+          if (!error) {
+            this.root.questionStore.addQuestionToLocal(message.data.question);
+          } else {
+            console.error(error);
+          }
         },
-        POST: () => {},
         PUT: () => {}
       },
-      questions: {
-        DELETE: () => {
-          const qid = message.data.qid
-          const error = message.data.error
-          if(!error) {
-            this.root.questionStore.deleteQuestionFromLocal(qid)
-          }
-          else {
-            console.error(error)
-          }
+
+      "/events/\\d+/polls/\\d+": {
+        POST: () => {
+          this.root.pollStore.addPollToLocal(message.data.poll);
         },
-        id: {
-          reply: {
-            POST: () => {
-              const error = message.data.error
-              if(!error) {
-                this.root.questionStore.addReplyToLocal(message.data)
-              }
-              else {
-                console.error(error)
-              }
-            }
+        PUT: () => {
+          this.root.pollStore.updatePollInLocal(message.data.poll);
+        },
+        DELETE: () => {
+          this.root.pollStore.deletePollFromLocal(message.data.poll);
+        }
+      },
+
+      "/events/\\d+/polls/\\d+/options/\\d+/vote": {
+        POST: () => {
+          this.root.pollStore.voteInLocal(
+            ids[1], // pollId
+            message.data.option
+          );
+        }
+      },
+
+      "/questions/\\d+": {
+        DELETE: () => {
+          const qid = message.data.qid;
+          const error = message.data.error;
+          if (!error) {
+            this.root.questionStore.deleteQuestionFromLocal(qid);
+          } else {
+            console.error(error);
+          }
+        }
+      },
+
+      "/questions/\\d+/reply": {
+        POST: () => {
+          const error = message.data.error;
+          if (!error) {
+            this.root.questionStore.addReplyToLocal(message.data);
+          } else {
+            console.error(error);
           }
         }
       }
     };
-    if (resources.length <= 2) {
-      ROUTES[resources[0]][message.verb]();
-    } else if (resources.length <= 4) {
-      ROUTES[resources[0]]["id"][resources[2]][message.verb]();
+    let reg;
+    for (const pattern in ROUTES) {
+      reg = new RegExp(pattern);
+      if (reg.test(message.url)) {
+        ROUTES[pattern][message.verb]();
+        return;
+      }
     }
   }
 }

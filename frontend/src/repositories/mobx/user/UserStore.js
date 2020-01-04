@@ -112,10 +112,10 @@ export class UserStore {
       .json(({ user }) => {
         this.pending = false;
         this.user = user;
-        // this.anonymousAuth();
+        this.anonymousAuth();
       })
       .catch(error => {
-        // this.anonymousAuth();
+        this.anonymousAuth();
       });
   }
 
@@ -125,7 +125,6 @@ export class UserStore {
       .url("/anonymous-users/auth")
       .get()
       .json(({ anonymousUser }) => {
-        //this.pending = false;
         this.anonymousUser = anonymousUser;
         this.pending = false;
       })
@@ -180,7 +179,6 @@ export class UserStore {
         .json(({ member }) => {
           this.member = member;
           this.joining = false;
-          console.log(this.member)
           cb.onSuccess();
         })
         .catch(e => {

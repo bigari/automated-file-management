@@ -32,7 +32,7 @@ const Event = observer(props => {
 
   const wss= rootStore.webSocketService;
   wss.init(`events/${eventId}`);
-  // webSocketService.send({
+  // wss.send({
   //   url: "events",
   //   verb: "GET"
   // });
