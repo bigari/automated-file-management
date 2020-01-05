@@ -26,7 +26,9 @@ const useStyles = makeStyles(theme => ({
   header: {
     "margin-bottom": "1px",
     padding: "10px",
-    "border-bottom": "1px solid #e0e0e0"
+    "border-bottom": "1px solid #e0e0e0",
+    background: "#e0e0e0",
+    fontStyle: "bold"
   }
 }));
 

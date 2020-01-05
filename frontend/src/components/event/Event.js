@@ -63,31 +63,31 @@ const Event = observer(props => {
             <SideNav.Nav defaultSelected="info">
               <NavItem eventKey="info">
                 <NavIcon>
-                  <InfoRounded style={{ fontSize: "2em" }} />
+                  <InfoRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
                 </NavIcon>
                 <NavText>Info</NavText>
               </NavItem>
               <NavItem eventKey="polls">
                 <NavIcon>
-                  <BarChartRounded style={{ fontSize: "2em" }} />
+                  <BarChartRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
                 </NavIcon>
                 <NavText>Polls</NavText>
               </NavItem>
               <NavItem eventKey="qas">
                 <NavIcon>
-                  <QuestionAnswerRounded style={{ fontSize: "2em" }} />
+                  <QuestionAnswerRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
                 </NavIcon>
                 <NavText>QA</NavText>
               </NavItem>
               <NavItem eventKey="members">
                 <NavIcon>
-                  <GroupRounded style={{ fontSize: "2em" }} />
+                  <GroupRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
                 </NavIcon>
                 <NavText>Members</NavText>
               </NavItem>
               <NavItem eventKey="back">
                 <NavIcon>
-                  <ArrowBackIosRounded style={{ fontSize: "2em" }} />
+                  <ArrowBackIosRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
                 </NavIcon>
               </NavItem>
             </SideNav.Nav>

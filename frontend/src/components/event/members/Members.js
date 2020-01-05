@@ -21,11 +21,14 @@ const useStyles = makeStyles(theme => ({
     alignContent: "flex-end"
   },
   member: {
-    padding: "10px"
+    padding: "10px",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   header: {
     paddingTop: "10px",
-    paddingBottom: "10px",
+    paddingBottom: "20px",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between"
@@ -65,7 +68,6 @@ export default observer(props => {
         </Typography>        
         <Button variant="contained" color="primary" onClick={openModal}>
           Add a member
-
         </Button>
       </Box>
       <Paper>
@@ -74,13 +76,19 @@ export default observer(props => {
             store.members.map(member => {
               return (
                 <div key={member.id} className={classes.member}>
-                  <div>{member.email}</div>
-                  <div>{member.username}</div>
+                  <div>
+                    <div>{member.email}</div>
+                    <div>{member.username}</div>
+                  </div>
                   {
                     (member.role != 0) ? 
-                      (<button onClick={e => {deleteMember(e, member.id)}}>
+                      (<Button
+
+                        variant="contained" 
+                        color="secondary"
+                        onClick={e => {deleteMember(e, member.id)}}>
                        delete
-                      </button>)
+                      </Button>)
                       : (<div/>)
                   }
                 </div>

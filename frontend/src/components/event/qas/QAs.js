@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Paper } from "@material-ui/core";
+import { Box, Container, Paper, Typography } from "@material-ui/core";
 import Question from "./Question";
 import { observer } from "mobx-react";
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,6 +12,10 @@ const useStyles = makeStyles(theme => ({
   },
   hide: {
     display: "none"
+  },
+  header: {
+    paddingTop: "10px",
+    paddingBottom: "20px",
   }
 }));
 
@@ -23,6 +27,11 @@ export default observer(props => {
 
   return (
     <Container maxWidth="md">
+      <Box className={classes.header}>
+        <Typography variant="h5">
+         Questions & Answers
+        </Typography>        
+      </Box>
       <Paper>
         <Box className={(store.qas.length)? classes.hide : classes.show}>
           0 Questions
