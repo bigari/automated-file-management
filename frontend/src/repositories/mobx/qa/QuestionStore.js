@@ -87,6 +87,19 @@ export class QuestionStore {
       i++
     }
   }
+
+  sendQuestion(question) {
+    const message = {
+      verb: "POST",
+      url: `events/${this.eid}/qas`,
+      data: {
+        content: question,
+        memberId: this.root.userStore.member.id
+      }
+    }
+    
+    this.wss.send(message)
+  }
 }
 
 decorate(QuestionStore, {

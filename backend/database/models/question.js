@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     eid: {
       type: DataTypes.INTEGER,
       notNull: true
+    },
+    memberId: {
+      type: DataTypes.INTEGER
     }
   }, {timestamps: false});
   Question.associate = function(models) {

@@ -114,6 +114,7 @@ export default observer(props => {
               margin="normal"
               helperText={store.error}
               error={Boolean(store.error)}
+              variant="outlined"
             />
 
             <Button variant="contained" 

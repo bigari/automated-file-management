@@ -2,7 +2,7 @@ import React, { useState } from "react";
 //import { makeStyles } from "@material-ui/core/styles";
 import { Box, Container, IconButton, Typography, Paper } from "@material-ui/core";
 import { observer } from "mobx-react";
-import { VisibilityRounded, VisibilityOffRounded, CallMissedSharp } from "@material-ui/icons/";
+import { VisibilityRounded, VisibilityOffRounded } from "@material-ui/icons/";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({

@@ -13,17 +13,17 @@ module.exports = {
         references: {         
           model: 'Events',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       content: {
         type: Sequelize.STRING
       },
-      reply: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
       timestamp: {
         type: Sequelize.DATE
+      },
+      memberId: {
+        type: Sequelize.INTEGER
       }
     });
   },

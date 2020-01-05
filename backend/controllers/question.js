@@ -97,11 +97,12 @@ module.exports = {
 
             question = await Question.create({
                 content: question.content,
+                memberId: question.memberId,
                 timestamp: new Date(),
                 eid: req.params.eid
               });
 
-            question.replies = []
+            question.dataValues.replies = []
             
             res.status(200)
             .set("Content-Type", "application/json")
