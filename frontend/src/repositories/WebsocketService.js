@@ -73,6 +73,10 @@ export default class WebsocketService {
    *
    */
   send(message) {
+    if (message.url[0] === "/") {
+      //Because superagent add the first /
+      message.url = message.url.substring(1);
+    }
     this.queue.push(message);
     this.sendQueue();
   }
@@ -94,13 +98,13 @@ export default class WebsocketService {
     }
     // With this, "/" terminated url won't work
     const ROUTES = {
-      "/events/\\d+": {
+      "events/\\d+": {
         GET: () => {
           console.log(message.data);
         }
       },
 
-      "/events/\\d+/qas": {
+      "events/\\d+/qas": {
         POST: () => {
           const error = message.data.error;
           if (!error) {
@@ -112,7 +116,7 @@ export default class WebsocketService {
         PUT: () => {}
       },
 
-      "/events/\\d+/polls/\\d+": {
+      "events/\\d+/polls/\\d+": {
         POST: () => {
           this.root.pollStore.addPollToLocal(message.data.poll);
         },
@@ -124,7 +128,7 @@ export default class WebsocketService {
         }
       },
 
-      "/events/\\d+/polls/\\d+/options/\\d+/vote": {
+      "events/\\d+/polls/\\d+/options/\\d+/vote": {
         POST: () => {
           this.root.pollStore.voteInLocal(
             ids[1], // pollId
@@ -133,7 +137,7 @@ export default class WebsocketService {
         }
       },
 
-      "/questions/\\d+": {
+      "questions/\\d+": {
         DELETE: () => {
           const qid = message.data.qid;
           const error = message.data.error;
@@ -145,7 +149,7 @@ export default class WebsocketService {
         }
       },
 
-      "/questions/\\d+/reply": {
+      "questions/\\d+/reply": {
         POST: () => {
           const error = message.data.error;
           if (!error) {
@@ -158,7 +162,7 @@ export default class WebsocketService {
     };
     let reg;
     for (const pattern in ROUTES) {
-      reg = new RegExp(pattern);
+      reg = new RegExp("^" + pattern + "$");
       if (reg.test(message.url)) {
         ROUTES[pattern][message.verb]();
         return;
