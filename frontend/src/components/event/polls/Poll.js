@@ -54,7 +54,7 @@ export default observer(props => {
     );
   }
 
-  return poll !== null ? (
+  return poll ? (
     <Box
       p={1}
       pl={2}
