@@ -33,6 +33,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const ellipse = (text, maxLength) =>
+  text.substring(0, maxLength) + (text.length > maxLength ? "..." : "");
+
 export default observer(props => {
   const classes = useStyles();
   const pollStore = props.rootStore.pollStore;
@@ -72,7 +75,7 @@ export default observer(props => {
       return null;
     }
     for (const poll of polls) {
-      if ( poll.id === pollId) {
+      if (poll.id === pollId) {
         return poll;
       }
     }
@@ -83,7 +86,7 @@ export default observer(props => {
     const { data, index, style } = props;
     // data holds the polls list
     const toggleVisibility = e => {
-      // e.stopPropagation();
+      e.stopPropagation();
       data[index].isVisible = !data[index].isVisible;
       const newPoll = {
         title: data[index].title,
@@ -102,7 +105,12 @@ export default observer(props => {
           setIsFormVisible(false);
         }}
       >
-        <ListItemText primary={`${data[index].title}`} />
+        <ListItemText
+          primary={`${ellipse(
+            data[index].title,
+            userStore.isParticipant ? 26 : 13
+          )}`}
+        />
         {!userStore.isParticipant && (
           <IconButton onClick={toggleVisibility}>
             {data[index].isVisible ? (
