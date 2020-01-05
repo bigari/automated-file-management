@@ -42,16 +42,16 @@ export default observer(props => {
   let polls;
   if (userStore.isParticipant) {
     polls = pollStore.visibleList;
+  } else {
+    polls = pollStore.list;
   }
-  polls = pollStore.list;
-  const [pollIndex, setPollIndex] = useState(null);
+  const [pollId, setPollId] = useState(-1);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [selectedPoll, setSelectedPoll] = useState(null);
 
   const handleOnCancel = () => {
     setIsFormVisible(false);
     setSelectedPoll(null);
-    //setPollIndex(pollIndex);
   };
 
   const handleShowAddForm = () => {
@@ -65,6 +65,18 @@ export default observer(props => {
   const handleShowEditForm = poll => {
     setSelectedPoll(poll);
     setIsFormVisible(true);
+  };
+
+  const getPollById = () => {
+    if (pollId === -1) {
+      return null;
+    }
+    for (const poll of polls) {
+      if ( poll.id === pollId) {
+        return poll;
+      }
+    }
+    return null;
   };
 
   function renderRowPolls(props) {
@@ -85,7 +97,7 @@ export default observer(props => {
         style={style}
         key={data[index].id}
         onClick={e => {
-          setPollIndex(index);
+          setPollId(data[index].id);
           setSelectedPoll(null);
           setIsFormVisible(false);
         }}
@@ -119,8 +131,8 @@ export default observer(props => {
             onClick={e => {
               e.stopPropagation();
               pollStore.deletePollFromServer(eid, data[index].id);
-              if (pollIndex === index) {
-                setPollIndex(null);
+              if (pollId === data[index].id) {
+                setPollId(-1);
               }
             }}
           >
@@ -138,15 +150,18 @@ export default observer(props => {
           style={{
             backgroundColor: "#efefef"
           }}
+          title={userStore.isParticipant ? "Polls" : ""}
           avatar={
-            <Button
-              color="primary"
-              aria-label="Add Poll"
-              onClick={handleShowAddForm}
-              startIcon={<AddRounded />}
-            >
-              Add Poll
-            </Button>
+            userStore.isParticipant ? null : (
+              <Button
+                color="primary"
+                aria-label="Add Poll"
+                onClick={handleShowAddForm}
+                startIcon={<AddRounded />}
+              >
+                Add Poll
+              </Button>
+            )
           }
         ></CardHeader>
         <CardContent>
@@ -182,7 +197,7 @@ export default observer(props => {
             ) : (
               <Poll
                 eid={eid}
-                poll={pollIndex!==null ? polls[pollIndex] : null}
+                poll={getPollById()}
                 rootStore={props.rootStore}
               />
             )}
