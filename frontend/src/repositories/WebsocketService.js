@@ -116,10 +116,13 @@ export default class WebsocketService {
         PUT: () => {}
       },
 
-      "events/\\d+/polls/\\d+": {
+      "events/\\d+/polls": {
         POST: () => {
           this.root.pollStore.addPollToLocal(message.data.poll);
-        },
+        }
+      },
+
+      "events/\\d+/polls/\\d+": {
         PUT: () => {
           this.root.pollStore.updatePollInLocal(message.data.poll);
         },
@@ -128,11 +131,11 @@ export default class WebsocketService {
         }
       },
 
-      "events/\\d+/polls/\\d+/options/\\d+/vote": {
+      "events/\\d+/polls/\\d+/vote": {
         POST: () => {
           this.root.pollStore.voteInLocal(
             ids[1], // pollId
-            message.data.option
+            message.data.options
           );
         }
       },

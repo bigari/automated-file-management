@@ -15,8 +15,16 @@ export class PollStore {
     return Object.values(this.polls);
   }
 
+  get visibleList() {
+    return Object.values(this.polls).filter(poll => poll.isVisible);
+  }
+
   voteInServer(eid, pollId, optionId) {
-    this.polls[pollId].choice = optionId
+    const choice = this.polls[pollId].choice;
+    if (choice && choice === optionId) {
+      return;
+    }
+    this.polls[pollId].choice = optionId;
     this.wss.send({
       url: `/events/${eid}/polls/${pollId}/vote`,
       verb: "POST",
@@ -24,13 +32,9 @@ export class PollStore {
     });
   }
 
-  voteInLocal(pollId, option) {
-    const options = this.polls[pollId].options;
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].id === option.id) {
-        options[i] = option;
-      }
-    }
+  voteInLocal(pollId, options) {
+    console.log("Vote received");
+    this.polls[pollId].options = options;
   }
 
   deletePollFromServer(eid, pollId) {
@@ -45,7 +49,7 @@ export class PollStore {
     delete this.polls[poll.id];
   }
 
-  //A poll update destroys all the options
+  //If newPoll contains options, destroy all the options
   // ... and create some new
   updatePollInServer(eid, pollId, newPoll) {
     this.wss.send({
@@ -56,6 +60,11 @@ export class PollStore {
   }
 
   updatePollInLocal(poll) {
+    console.log("update poll message received");
+    if (!poll.options) {
+      poll.options = this.polls[poll.id].options;
+      poll.choice = this.polls[poll.id].choice;
+    }
     this.polls[poll.id] = poll;
   }
 
@@ -100,6 +109,7 @@ export class PollStore {
 
 decorate(PollStore, {
   list: computed,
+  visibleList: computed,
   hasFetched: observable,
   polls: observable,
   error: observable,

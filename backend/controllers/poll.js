@@ -1,14 +1,27 @@
 const { Poll, Option, Vote, Sequelize } = require("../database/models/index");
 
 module.exports = {
+  getOptionById: function(optionId, options) {
+    optionId = parseInt(optionId);
+    if (!options) {
+      return null;
+    }
+    for (const option of options) {
+      if (option.id === optionId) {
+        return option;
+      }
+    }
+    return null;
+  },
+
   vote: async function(req, res) {
     const pollId = req.params.pollId;
     const optionId = req.body.optionId;
     const member = req.user.extras.member;
     try {
-      const option = await Option.findOne({
+      const options = await Option.findAll({
         where: {
-          id: optionId
+          pollId: pollId
         },
         group: ["Option.id"],
         attributes: {
@@ -24,6 +37,7 @@ module.exports = {
           }
         ]
       });
+      const option = this.getOptionById(optionId, options);
       if (!option) {
         res
           .status(404)
@@ -44,6 +58,10 @@ module.exports = {
             id: vote.id
           }
         });
+        const prevOption = this.getOptionById(vote.optionId, options);
+        if (prevOption) {
+          prevOption.dataValues.voteCount--;
+        }
       }
 
       if (!vote || vote.optionId != optionId) {
@@ -58,7 +76,7 @@ module.exports = {
       res
         .status(200)
         .set("Content-Type", "application/json")
-        .send({ option: option });
+        .send({ options: options });
     } catch (err) {
       console.log(err);
       res
@@ -91,13 +109,15 @@ module.exports = {
     }
   },
 
+  // If options found in body, destroy existing one
   updatePoll: async function(req, res) {
     const eid = req.params.eid;
     const pollId = req.params.pollId;
     try {
       await Poll.update(
         {
-          title: req.body.title
+          title: req.body.title,
+          isVisible: req.body.isVisible
         },
         { where: { id: pollId } }
       );
@@ -105,16 +125,19 @@ module.exports = {
       const poll = {
         id: pollId,
         title: req.body.title,
-        eventId: eid
+        eventId: eid,
+        isVisible: req.body.isVisible
       };
 
-      await Option.destroy({
-        where: {
-          pollId: pollId
-        }
-      });
-      const options = await this.insertOptions(pollId, req.body.options);
-      poll.options = options;
+      if (req.body.options) {
+        await Option.destroy({
+          where: {
+            pollId: pollId
+          }
+        });
+        const options = await this.insertOptions(pollId, req.body.options);
+        poll.options = options;
+      }
       res
         .status(200)
         .set("Content-Type", "application/json")

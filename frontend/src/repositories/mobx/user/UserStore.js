@@ -26,6 +26,10 @@ export class UserStore {
     return this.user ? true : false;
   }
 
+  get isParticipant() {
+    return this.member && this.member.role === 2;
+  }
+
   // isPending is true if the call to validateCookie is yet to be resolved
   get isPending() {
     return Boolean(this.pending);
@@ -199,6 +203,7 @@ decorate(UserStore, {
   member: observable,
   pending: observable,
   isLoggedIn: computed,
+  isParticipant: computed,
   isPending: computed,
   joining: observable,
   signinError: observable,

@@ -11,6 +11,7 @@ module.exports = {
       title: {
         type: Sequelize.STRING
       },
+      // + eventId && isVisible
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

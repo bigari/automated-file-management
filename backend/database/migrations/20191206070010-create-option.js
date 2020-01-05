@@ -15,7 +15,7 @@ module.exports = {
       voteCount: {
         type: Sequelize.INTEGER
       },
-      //Add pollId
+      //Add pollId 
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

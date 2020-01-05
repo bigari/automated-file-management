@@ -8,15 +8,9 @@ import {
   ListItemIcon
 } from "@material-ui/core";
 import { observer } from "mobx-react";
-import { makeStyles } from "@material-ui/core/styles";
 import { FixedSizeList } from "react-window";
 import { HowToVoteRounded, CheckRounded } from "@material-ui/icons";
-
-const useStyles = makeStyles(theme => ({
-  borderRight: {
-    "border-right": "2px solid #e2e2e1"
-  }
-}));
+import Centered from "../../Centered";
 
 const genColor = (id, len) => {
   id = parseInt(id) * Math.floor(256 / len);
@@ -30,10 +24,9 @@ const totalVotes = options =>
   options.reduce((acc, op) => acc + parseInt(op.voteCount), 0);
 
 export default observer(props => {
-  const classes = useStyles();
   const pollStore = props.rootStore.pollStore;
   const poll = props.poll;
-  const editable = props.editable;
+  const eid = props.eid;
 
   function renderRowOptions(props) {
     const { data, index, style } = props;
@@ -52,6 +45,7 @@ export default observer(props => {
         <IconButton
           onClick={e => {
             e.stopPropagation();
+            pollStore.voteInServer(eid, poll.id, data[index].id);
           }}
         >
           <HowToVoteRounded></HowToVoteRounded>
@@ -111,21 +105,6 @@ export default observer(props => {
       </Box>
     </Box>
   ) : (
-    <Box
-      p={1}
-      pl={4}
-      display="flex"
-      style={{
-        width: "100%"
-      }}
-      flexDirection="column"
-      justifyContent="center"
-      alignContent="center"
-      bgcolor="background.paper"
-    >
-      <Box p={1} bgcolor="grey.300" textAlign="center">
-        No poll active
-      </Box>
-    </Box>
+    <Centered label="No active poll" />
   );
 });

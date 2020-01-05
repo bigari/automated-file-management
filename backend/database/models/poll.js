@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     "Poll",
     {
       title: DataTypes.STRING,
-      eventId: DataTypes.INTEGER
+      eventId: DataTypes.INTEGER,
+      isVisible: DataTypes.BOOLEAN
     },
     {}
   );

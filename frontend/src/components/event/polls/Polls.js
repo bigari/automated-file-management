@@ -14,13 +14,15 @@ import { observer } from "mobx-react";
 import { makeStyles } from "@material-ui/core/styles";
 import { FixedSizeList } from "react-window";
 import {
-  PlayArrowRounded,
   DeleteRounded,
   EditRounded,
   AddRounded,
-  PauseRounded
+  VisibilityRounded,
+  VisibilityOffRounded
 } from "@material-ui/icons";
 import Poll from "./Poll";
+import PollForm from "./PollForm";
+import Centered from "../../Centered";
 
 const useStyles = makeStyles(theme => ({
   isUnactive: {
@@ -34,46 +36,97 @@ const useStyles = makeStyles(theme => ({
 export default observer(props => {
   const classes = useStyles();
   const pollStore = props.rootStore.pollStore;
+  const userStore = props.rootStore.userStore;
   const eid = props.eid;
   pollStore.fetchPolls(eid);
-  const polls = pollStore.list;
-  const [poll, setPoll] = useState(null);
-  const [editable, setEditable] = useState(false);
+  let polls;
+  if (userStore.isParticipant) {
+    polls = pollStore.visibleList;
+  }
+  polls = pollStore.list;
+  const [pollIndex, setPollIndex] = useState(null);
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [selectedPoll, setSelectedPoll] = useState(null);
+
+  const handleOnCancel = () => {
+    setIsFormVisible(false);
+    setSelectedPoll(null);
+    //setPollIndex(pollIndex);
+  };
+
+  const handleShowAddForm = () => {
+    if (isFormVisible) {
+      return;
+    }
+    setSelectedPoll(null);
+    setIsFormVisible(true);
+  };
+
+  const handleShowEditForm = poll => {
+    setSelectedPoll(poll);
+    setIsFormVisible(true);
+  };
 
   function renderRowPolls(props) {
     const { data, index, style } = props;
     // data holds the polls list
+    const toggleVisibility = e => {
+      // e.stopPropagation();
+      data[index].isVisible = !data[index].isVisible;
+      const newPoll = {
+        title: data[index].title,
+        isVisible: data[index].isVisible
+      };
+      pollStore.updatePollInServer(eid, data[index].id, newPoll);
+    };
     return (
       <ListItem
         button
         style={style}
         key={data[index].id}
         onClick={e => {
-          setPoll(data[index]);
+          setPollIndex(index);
+          setSelectedPoll(null);
+          setIsFormVisible(false);
         }}
       >
         <ListItemText primary={`${data[index].title}`} />
-        <IconButton
-          onClick={e => {
-            e.stopPropagation();
-          }}
-        >
-          <PlayArrowRounded />
-        </IconButton>
-        <IconButton
-          onClick={e => {
-            e.stopPropagation();
-          }}
-        >
-          <EditRounded />
-        </IconButton>
-        <IconButton
-          onClick={e => {
-            e.stopPropagation();
-          }}
-        >
-          <DeleteRounded />
-        </IconButton>
+        {!userStore.isParticipant && (
+          <IconButton onClick={toggleVisibility}>
+            {data[index].isVisible ? (
+              <VisibilityRounded />
+            ) : (
+              <VisibilityOffRounded />
+            )}
+          </IconButton>
+        )}
+        {!userStore.isParticipant && (
+          <IconButton
+            onClick={e => {
+              e.stopPropagation();
+              if (isFormVisible && !selectedPoll) {
+                //IsAdding
+                return;
+              }
+              handleShowEditForm(data[index]);
+            }}
+          >
+            <EditRounded />
+          </IconButton>
+        )}
+        {!userStore.isParticipant && (
+          <IconButton
+            onClick={e => {
+              e.stopPropagation();
+              pollStore.deletePollFromServer(eid, data[index].id);
+              if (pollIndex === index) {
+                setPollIndex(null);
+              }
+            }}
+          >
+            <DeleteRounded />
+          </IconButton>
+        )}
       </ListItem>
     );
   }
@@ -89,7 +142,7 @@ export default observer(props => {
             <Button
               color="primary"
               aria-label="Add Poll"
-              onClick={e => {}}
+              onClick={handleShowAddForm}
               startIcon={<AddRounded />}
             >
               Add Poll
@@ -104,22 +157,35 @@ export default observer(props => {
             m={1}
             bgcolor="background.paper"
           >
-            <Box p={1} className={classes.borderRight}>
-              <FixedSizeList
-                height={600}
-                width={360}
-                itemSize={46}
-                itemCount={polls.length}
-                itemData={polls}
-              >
-                {renderRowPolls}
-              </FixedSizeList>
-            </Box>
-            <Poll
-              poll={poll}
-              editable={true}
-              rootStore={props.rootStore}
-            ></Poll>
+            {polls.length > 0 ? (
+              <Box p={1} className={classes.borderRight}>
+                <FixedSizeList
+                  height={600}
+                  width={360}
+                  itemSize={46}
+                  itemCount={polls.length}
+                  itemData={polls}
+                >
+                  {renderRowPolls}
+                </FixedSizeList>
+              </Box>
+            ) : (
+              <Centered label="Empty Poll List" />
+            )}
+            {isFormVisible ? (
+              <PollForm
+                rootStore={props.rootStore}
+                eid={eid}
+                poll={selectedPoll}
+                onCancel={handleOnCancel}
+              />
+            ) : (
+              <Poll
+                eid={eid}
+                poll={pollIndex!==null ? polls[pollIndex] : null}
+                rootStore={props.rootStore}
+              />
+            )}
           </Box>
         </CardContent>
       </Card>
