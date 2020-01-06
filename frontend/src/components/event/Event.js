@@ -53,6 +53,9 @@ const Event = observer(props => {
               if (selected === "back") {
                 props.history.replace("/events");
                 wss.close();
+                rootStore.questionStore.hasFetched = false;
+                rootStore.pollStore.hasFetched = false;
+                rootStore.memberStore.hasFetched = false;
                 return;
               }
               const to = `/events/${eventId}/` + selected;

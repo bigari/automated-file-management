@@ -24,10 +24,13 @@ const Events = observer(props => {
   
   useEffect(() => {
     async function fetchEvents() {
-      await eventStore.fetchAll();
+      await rootStore.eventStore.fetchAll();
+      rootStore.questionStore.hasFetched = false;
+      rootStore.pollStore.hasFetched = false;
+      rootStore.memberStore.hasFetched = false;
     }
     fetchEvents();
-  }, [eventStore]);
+  }, [rootStore]);
 
   const events = eventStore.list;
   const classes = useStyles();

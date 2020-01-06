@@ -96,6 +96,7 @@ export class MemberStore {
 
 decorate(MemberStore, {
   members: observable,
+  hasFetched: observable,
   participants: observable,
   participantCount: computed,
   addParticipant: action,

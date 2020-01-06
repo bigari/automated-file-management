@@ -38,7 +38,9 @@ const Stats = observer(props => {
 
   return (
     <Container maxWidth="md">
-      <Typography variant="h5">Statistics</Typography>
+      <Typography style={{ marginBottom: "24px" }} variant="h5">
+        Statistics & Engagement
+      </Typography>
       <Centered
         label={
           <Grid container spacing={2}>
