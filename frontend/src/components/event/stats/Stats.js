@@ -37,7 +37,7 @@ const Stats = observer(props => {
   voteEngagement = voteEngagement >= 0 ? voteEngagement + " %" : "-";
 
   return (
-    <Container md>
+    <Container maxWidth="md">
       <Typography variant="h5">Statistics</Typography>
       <Centered
         label={

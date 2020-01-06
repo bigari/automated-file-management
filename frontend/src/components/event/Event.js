@@ -52,6 +52,7 @@ const Event = observer(props => {
             onSelect={selected => {
               if (selected === "back") {
                 props.history.replace("/events");
+                wss.close();
                 return;
               }
               const to = `/events/${eventId}/` + selected;
