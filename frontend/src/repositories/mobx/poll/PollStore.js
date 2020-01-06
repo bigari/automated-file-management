@@ -19,6 +19,16 @@ export class PollStore {
     return Object.values(this.polls).filter(poll => poll.isVisible);
   }
 
+  get totalVotes() {
+    let total = 0;
+    for (const poll of Object.values(this.polls)) {
+      for (const option of poll.options) {
+        total += parseInt(option.voteCount);
+      }
+    }
+    return total;
+  }
+
   voteInServer(eid, pollId, optionId) {
     const choice = this.polls[pollId].choice;
     if (choice && choice === optionId) {
@@ -109,6 +119,7 @@ export class PollStore {
 
 decorate(PollStore, {
   list: computed,
+  totalVotes: computed,
   visibleList: computed,
   hasFetched: observable,
   polls: observable,

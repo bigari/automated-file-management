@@ -24,7 +24,15 @@ export default class WebsocketService {
     this.socket = new WebSocket(`ws://localhost:5003/${channelPath}`);
     this.socket.onopen = event => {
       this.isOpen = true;
-      this.sendQueue();
+      if (this.root.userStore.isParticipant) {
+        const member = this.root.userStore.member
+        this.send({
+          verb: "POST",
+          url: `wsjoin::${channelPath}/members/${member.id}`
+        });
+      } else {
+        this.sendQueue()
+      }
       console.log("[open] Connection established");
     };
     this.socket.onmessage = event => {
@@ -98,6 +106,15 @@ export default class WebsocketService {
     }
     // With this, "/" terminated url won't work
     const ROUTES = {
+      "wsjoin::events/\\d+/members/\\d+": {
+        POST: () => {
+          this.root.memberStore.addParticipant(ids[0], ids[1]);
+        },
+        DELETE: () => {
+          //this.root.memberStore.removeParticipant(ids[0], ids[1]);
+        }
+      },
+
       "events/\\d+": {
         GET: () => {
           console.log(message.data);

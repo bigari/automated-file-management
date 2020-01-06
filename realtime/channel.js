@@ -35,7 +35,7 @@ class ChannelManager {
     this.channels[channel] = this.channels[channel].filter(
       client => client !== ws
     );
-
+  //  cm.globalBroadcast(channel, [{ verb: "DELETE", url: ws.joinUrl }]);
     if (this.channels[channel].length === 0) {
       this.sub.unsubscribe(channel);
       console.log(`Redis unsuscribe from ${channel}`);

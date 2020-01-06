@@ -32,15 +32,19 @@ module.exports = {
   list: async function(req, res) {
     try {
       const events = await Event.findAll({
-        include: [{
-          attributes: [],
-          model: Member,
-          as: "members",
-          where: [{
-            userId: req.user.id
-          }]
-        }]
-      })
+        include: [
+          {
+            attributes: [],
+            model: Member,
+            as: "members",
+            where: [
+              {
+                userId: req.user.id
+              }
+            ]
+          }
+        ]
+      });
 
       res
         .status(200)
@@ -54,24 +58,24 @@ module.exports = {
 
   // avoid adding member two times, userId eventID prim key
   addMember: async function(req, res) {
-    const role = 1
-    const eid = req.params.eid
-    const username = req.body.username
+    const role = 1;
+    const eid = req.params.eid;
+    const username = req.body.username;
     try {
-      const user = await this.getUser(username)
+      const user = await this.getUser(username);
       const member = await Member.create({
         eventId: eid,
         role: role,
         userId: user.id,
         auid: 0
-      })
+      });
 
-      res.status(200)
+      res
+        .status(200)
         .set("Content-Type", "application/json")
-        .send({member: user});
-    
+        .send({ member: user });
     } catch (e) {
-      console.log(e.message)
+      console.log(e.message);
       res
         .status(500)
         .set("Content-Type", "application/json")
@@ -81,11 +85,11 @@ module.exports = {
 
   getUser: async function(username) {
     const user = await User.findOne({
-      where: {username: username}
-    })
+      where: { username: username }
+    });
 
-    if(user) return user
-    throw new Error("Invalid username")
+    if (user) return user;
+    throw new Error("Invalid username");
   },
 
   create: async function(req, res) {
@@ -134,8 +138,8 @@ module.exports = {
   },
 
   fetchMembers: async function(req, res) {
-    try{
-      const eid = req.params.eid
+    try {
+      const eid = req.params.eid;
       let members = await Member.findAll({
         attributes: ["role"],
         where: {
@@ -145,54 +149,63 @@ module.exports = {
           }
         },
         include: [
-          {model: User, as: 'user', attributes: ["id", "username", "email"]}
+          { model: User, as: "user", attributes: ["id", "username", "email"] }
         ]
-      })
+      });
+
+      let participants = await Member.findAll({
+        attributes: ["id"],
+        where: {
+          eventId: eid,
+          role: 2
+        }
+      });
 
       members = members.map(member => {
-        let mem = member.user
-        mem.dataValues.role = member.role
-        return mem
-      })
+        let mem = member.user;
+        mem.dataValues.role = member.role;
+        return mem;
+      });
 
       res
-      .status(200)
-      .set("Content-Type", "application/json")
-      .send({
-        members: members
-      })
-    }
-    catch(e) {
+        .status(200)
+        .set("Content-Type", "application/json")
+        .send({
+          members: members,
+          participants: participants
+        });
+    } catch (e) {
       res
-      .status(500)
-      .set("Content-Type", "application/json")
-      .send({error: e.message})
+        .status(500)
+        .set("Content-Type", "application/json")
+        .send({ error: e.message });
     }
   },
 
   deleteMember: async function(req, res) {
-    try{
-      const uid = req.params.uid
-      const eid = req.params.eid
+    try {
+      const uid = req.params.uid;
+      const eid = req.params.eid;
       await Member.destroy({
-        where: [{
-          userId: uid,
-          eventId: eid
-        }]
-      })
-      
+        where: [
+          {
+            userId: uid,
+            eventId: eid
+          }
+        ]
+      });
+
       res
-      .status(200)
-      .set("Content-Type", "application/json")
-      .send({
-        uid: uid
-      })
-    }
-    catch(e) {
+        .status(200)
+        .set("Content-Type", "application/json")
+        .send({
+          uid: uid
+        });
+    } catch (e) {
       res
-      .status(500)
-      .set("Content-Type", "application/json")
-      .send({error: e.message})
+        .status(500)
+        .set("Content-Type", "application/json")
+        .send({ error: e.message });
     }
   }
 };

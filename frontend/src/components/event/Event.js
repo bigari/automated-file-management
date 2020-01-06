@@ -7,7 +7,8 @@ import {
   QuestionAnswerRounded,
   GroupRounded,
   ArrowBackIosRounded,
-  InfoRounded
+  InfoRounded,
+  DonutSmallRounded
 } from "@material-ui/icons";
 import SideNav, { NavItem, NavIcon, NavText } from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
@@ -15,6 +16,7 @@ import QAs from "./qas/QAs";
 import Info from "./info/Info";
 import Members from "./members/Members";
 import Polls from "./polls/Polls";
+import Stats from "./stats/Stats";
 
 const Event = observer(props => {
   const { eventId } = useParams();
@@ -63,33 +65,57 @@ const Event = observer(props => {
             <SideNav.Nav defaultSelected="info">
               <NavItem eventKey="info">
                 <NavIcon>
-                  <InfoRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
+                  <InfoRounded
+                    style={{ fontSize: "2em", verticalAlign: "middle" }}
+                  />
                 </NavIcon>
                 <NavText>Info</NavText>
               </NavItem>
               <NavItem eventKey="polls">
                 <NavIcon>
-                  <BarChartRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
+                  <DonutSmallRounded
+                    style={{ fontSize: "2em", verticalAlign: "middle" }}
+                  />
                 </NavIcon>
                 <NavText>Polls</NavText>
               </NavItem>
               <NavItem eventKey="qas">
                 <NavIcon>
-                  <QuestionAnswerRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
+                  <QuestionAnswerRounded
+                    style={{ fontSize: "2em", verticalAlign: "middle" }}
+                  />
                 </NavIcon>
                 <NavText>QA</NavText>
               </NavItem>
-              <NavItem eventKey="members">
-                <NavIcon>
-                  <GroupRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
-                </NavIcon>
-                <NavText>Members</NavText>
-              </NavItem>
-              <NavItem eventKey="back">
-                <NavIcon>
-                  <ArrowBackIosRounded style={{ fontSize: "2em", verticalAlign: "middle" }} />
-                </NavIcon>
-              </NavItem>
+              {!userStore.isParticipant && (
+                <NavItem eventKey="members">
+                  <NavIcon>
+                    <GroupRounded
+                      style={{ fontSize: "2em", verticalAlign: "middle" }}
+                    />
+                  </NavIcon>
+                  <NavText>Members</NavText>
+                </NavItem>
+              )}
+              {!userStore.isParticipant && (
+                <NavItem eventKey="stats">
+                  <NavIcon>
+                    <BarChartRounded
+                      style={{ fontSize: "2em", verticalAlign: "middle" }}
+                    />
+                  </NavIcon>
+                </NavItem>
+              )}
+
+              {!userStore.isParticipant && (
+                <NavItem eventKey="back">
+                  <NavIcon>
+                    <ArrowBackIosRounded
+                      style={{ fontSize: "2em", verticalAlign: "middle" }}
+                    />
+                  </NavIcon>
+                </NavItem>
+              )}
             </SideNav.Nav>
           </SideNav>
           <main style={{ paddingLeft: 82, paddingTop: 24 }}>
@@ -112,6 +138,10 @@ const Event = observer(props => {
               component={props => (
                 <Members eid={eventId} rootStore={rootStore} />
               )}
+            />
+            <Route
+              path={`/events/${eventId}/stats`}
+              component={props => <Stats eid={eventId} rootStore={rootStore} />}
             />
           </main>
         </React.Fragment>

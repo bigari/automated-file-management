@@ -1,13 +1,29 @@
-import { observable, action, decorate } from "mobx";
+import { observable, action, decorate, computed } from "mobx";
 import client from "../../client";
 
 export class MemberStore {
   members = [];
+  participants = {};
+
   error = "";
   eid;
   hasFetched = false;
   constructor(root) {
     this.root = root;
+  }
+
+  get participantCount() {
+    if (this.participants[this.eid]) {
+      return this.participants[this.eid].size;
+    }
+    return 0;
+  }
+
+  addParticipant(eid, mid) {
+    if (!this.participants[eid]) {
+      this.participants[eid] = new Set();
+    }
+    this.participants[eid].add(mid);
   }
 
   addMember(eid, username) {
@@ -53,6 +69,18 @@ export class MemberStore {
         .get()
         .json(res => {
           this.members = res.members;
+          // if (res.participants != null) {
+          // if (this.participants) {
+          // this.participants[eid] = new Set([
+          //   ...this.participants[eid],
+          //   ...res.participants.map(p => p.id)
+          // ]);
+          // } else {
+          this.participants[eid] = new Set(res.participants.map(p => p.id));
+          //}
+
+          console.log(this.participants);
+          // }
           this.hasFetched = true;
         })
         .catch(e => {
@@ -68,6 +96,9 @@ export class MemberStore {
 
 decorate(MemberStore, {
   members: observable,
+  participants: observable,
+  participantCount: computed,
+  addParticipant: action,
   error: observable,
   fetchMembers: action,
   addMember: action,

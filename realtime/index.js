@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const sendHttp = require("./http");
 const wss = new WebSocket.Server({ port: 8080 });
 const cm = require("./channel");
-
+const wreg = /^wsjoin::/;
 console.log("Starting realtime server");
 
 wss.on("connection", (ws, req) => {
@@ -21,9 +21,15 @@ wss.on("connection", (ws, req) => {
     const messageWrapper = JSON.parse(message);
     const responseQueue = [];
     for (const messageJson of messageWrapper.queue) {
-      messageJson.jwt = messageWrapper.jwt;
-      messageJson.ajwt = messageWrapper.ajwt;
-      const res = await sendHttp(messageJson);
+      let res;
+      if (wreg.test(messageJson.url)) {
+        res = messageJson;
+        ws.joinUrl = messageJson.url;
+      } else {
+        messageJson.jwt = messageWrapper.jwt;
+        messageJson.ajwt = messageWrapper.ajwt;
+        res = await sendHttp(messageJson);
+      }
       responseQueue.push({
         url: messageJson.url,
         verb: messageJson.verb,

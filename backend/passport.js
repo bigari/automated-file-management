@@ -106,7 +106,6 @@ passport.use(
           where: { auid: payload.sub, eventId: eid }
         });
 
-        console.log(member.dataValues)
         if (!member) {
           return done(null, false);
         }
