@@ -68,7 +68,7 @@ export default function Question(props) {
         justifyContent="space-between" 
         >
           <button className={classes.buttons} onClick={openModal}>
-            {store.length} replies
+            {question.replies.length} replies
           </button>
           <IconButton
             onClick={showMenu}

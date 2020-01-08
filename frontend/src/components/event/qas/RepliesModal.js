@@ -36,7 +36,7 @@ const RepliesModal = observer(function(props) {
   const classes = useStyles();
   const question = props.question;
   const questionStore = props.store;
-  const userStore = porps.userStore;
+  const userStore = props.userStore;
   const [reply, setReply] = React.useState('');
   const [error, setError] = React.useState('');
 
