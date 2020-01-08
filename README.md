@@ -2,7 +2,7 @@
 
 ## Setup
 
-### Backend
+### Backend 
 
 ```bash
 mkdir backend/__postgres-data__
@@ -12,7 +12,7 @@ mkdir backend/__postgres-data__
 chmod +x run.sh
 ```
 
-To deploy the app you need to configure the app in /backend/.env.prod
+To deploy the app you need to configure it in /backend/.env.prod
 ## Run
 
 To run the frontend alone in a docker container
