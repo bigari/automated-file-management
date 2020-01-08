@@ -11,6 +11,10 @@ export class QuestionStore {
     this.wss = root.webSocketService;
   }
 
+  get length() {
+    return this.qas.replies.length
+  }
+
   // initially get data directly from database
   fetchQuestions(eid) {
     if (!this.hasFetched) {
@@ -103,6 +107,7 @@ export class QuestionStore {
 }
 
 decorate(QuestionStore, {
+  length: observable,
   qas: observable,
   hasFetched: observable,
   fetchQuestions: action,

@@ -36,6 +36,7 @@ const RepliesModal = observer(function(props) {
   const classes = useStyles();
   const question = props.question;
   const questionStore = props.store;
+  const userStore = porps.userStore;
   const [reply, setReply] = React.useState('');
   const [error, setError] = React.useState('');
 
@@ -73,31 +74,37 @@ const RepliesModal = observer(function(props) {
         </Box>
       </Box>
 
-      <Box
-        borderTop={0.1}
-        borderColor={borderColor}
-        px={2}
-        pb={2}
-        display="flex"
-        flexDirection="row"
-        alignItems="flex-end"
-        justifyContent="space-between"
-      >
-        <TextField
-          fullWidth={true}
-          value={reply ? reply : ''} 
-          onChange={event => setReply(event.target.value)}
-          id="reply"
-          label="Type your reply"
-          multiline
-          margin="normal"
-          helperText={error}
-          error={Boolean(error)}
-        />
-        <IconButton size="small" classes={{ root: classes.icon }} onClick={sendReply}>
-          <SendIcon />
-        </IconButton>
-      </Box>
+      {
+        (!userStore.isParticipant)? (
+          <Box
+            borderTop={0.1}
+            borderColor={borderColor}
+            px={2}
+            pb={2}
+            display="flex"
+            flexDirection="row"
+            alignItems="flex-end"
+            justifyContent="space-between"
+          >
+            <TextField
+              fullWidth={true}
+              value={reply ? reply : ''} 
+              onChange={event => setReply(event.target.value)}
+              id="reply"
+              label="Type your reply"
+              multiline
+              margin="normal"
+              helperText={error}
+              error={Boolean(error)}
+            />
+            <IconButton size="small" classes={{ root: classes.icon }} onClick={sendReply}>
+              <SendIcon />
+            </IconButton>
+          </Box>
+        ) : ''
+      }
+
+      
     </Box>
   );
 });

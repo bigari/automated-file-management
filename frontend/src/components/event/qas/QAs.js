@@ -76,7 +76,7 @@ export default observer(props => {
         <Box>
           {
             store.qas.map(question => {
-              return <Question question={question} store={store} key={question.id} />;
+              return <Question question={question} store={store} userStore={userStore} key={question.id} />;
             })
           }
         </Box>

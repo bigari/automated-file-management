@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Question(props) {
   const store = props.store;
+  const userStore = props.userStore;
   const classes = useStyles();
   const question = props.question;
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -67,7 +68,7 @@ export default function Question(props) {
         justifyContent="space-between" 
         >
           <button className={classes.buttons} onClick={openModal}>
-            {question.replies.length} replies
+            {store.length} replies
           </button>
           <IconButton
             onClick={showMenu}
@@ -93,7 +94,7 @@ export default function Question(props) {
       </Box>
       
       <Modal open={open} onClose={closeModal}>
-        <RepliesModal question={question} store={store}/>
+        <RepliesModal question={question} store={store} userStore={userStore}/>
       </Modal>
     </Box>
   );
